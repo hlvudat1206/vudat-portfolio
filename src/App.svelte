@@ -14,6 +14,23 @@
   let canvas;
 
   let options;
+  let projectList = [
+    {
+      id: 1,
+      name: "Rendering Tool",
+      description: "",
+    },
+    {
+      id: 2,
+      name: "Real Estate Simulation",
+      description: "",
+    },
+    {
+      id: 3,
+      name: "Doll House",
+      description: "",
+    },
+  ];
   window.VIEWER = {};
 
   if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
@@ -59,15 +76,24 @@
     const mainLayer = document.getElementById("main");
     // Create a new child element
     const canvasThree = viewer.rendererDom();
+    const projectArea = document.getElementById("built-projects");
+    const bioArea = document.getElementById("bio-area");
+    const skillArea = document.getElementById("skill-area");
     // Get the first child of the parent
     const canvas = mainLayer.firstChild;
     // Insert the new child before the first child
     mainLayer.insertBefore(canvasThree, canvas);
+    mainLayer.insertBefore(projectArea, canvasThree);
+    mainLayer.insertBefore(bioArea, projectArea);
+    mainLayer.insertBefore(skillArea, projectArea);
 
     const axesLayer = viewer.axesDom();
     mainLayer.insertBefore(axesLayer, canvas);
     const guiLayer = viewer.guiDom();
     mainLayer.insertBefore(guiLayer, canvas);
+
+    //set style
+    canvasThree.style = "border-radius:25px";
   };
 
   function loadModel(path) {
@@ -126,8 +152,42 @@
     on:click={onOverViewButton}>{textButtonView}</button
   > -->
 </div>
-<main id="main">
+<main
+  id="main"
+  style="display: flex;
+    flex-direction: column-reverse;"
+>
   <canvas class="full-screen" id="container" bind:this={canvas}> </canvas>
+  <div id="built-projects">
+    <div
+      style="font-weight: 600;
+    font-size: 20px;
+    margin-left: 20px;
+    text-align: left;
+    left: 10px;
+    color: #009999;"
+    >
+      3D Projects
+    </div>
+    <div class="project-card">
+      {#each projectList as item, key}
+        <div>
+          <div class="header-card">
+            {item.name}
+          </div>
+          <div>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam enim
+            perferendis temporibus, recusandae voluptates placeat quae? Iusto
+            error sint mollitia soluta quibusdam, laborum neque distinctio.
+            Culpa exercitationem aliquam nihil voluptatem.
+          </div>
+        </div>
+      {/each}
+    </div>
+  </div>
+  <div class="bio-area" id="bio-area">My Bio</div>
+
+  <div class="skill-area" id="skill-area">My Skill and Experience</div>
 </main>
 
 <!-- <SimpleModal
@@ -170,10 +230,6 @@
     top: 0;
     z-index: 0;
   }
-  /* .full-screen {
-    margin: 0 !important;
-    padding: 0 !important;
-  } */
 
   .view-button {
     left: 50%;
@@ -211,5 +267,9 @@
     /* width: 100%;
     position: absolute;
     height: 100%; */
+  }
+
+  .project-card {
+    display: flex;
   }
 </style>
