@@ -5,6 +5,7 @@
   import { Viewer } from "./lib/scene-config/viewer";
   import queryString from "@js/query-string-main/index.js";
   import WebGL from "@js/WebGL.js";
+  import Slider from "./content/slider.svelte";
 
   let scene;
   // let selectedModel = "src/models/thoitrang_nam_1fittingroom.gltf";
@@ -14,23 +15,7 @@
   let canvas;
 
   let options;
-  let projectList = [
-    {
-      id: 1,
-      name: "Rendering Tool",
-      description: "",
-    },
-    {
-      id: 2,
-      name: "Real Estate Simulation",
-      description: "",
-    },
-    {
-      id: 3,
-      name: "Doll House",
-      description: "",
-    },
-  ];
+
   window.VIEWER = {};
 
   if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
@@ -84,8 +69,8 @@
     // Insert the new child before the first child
     mainLayer.insertBefore(canvasThree, canvas);
     mainLayer.insertBefore(projectArea, canvasThree);
-    mainLayer.insertBefore(bioArea, projectArea);
-    mainLayer.insertBefore(skillArea, projectArea);
+    // mainLayer.insertBefore(bioArea, projectArea);
+    // mainLayer.insertBefore(skillArea, projectArea);
 
     const axesLayer = viewer.axesDom();
     mainLayer.insertBefore(axesLayer, canvas);
@@ -169,20 +154,8 @@
     >
       3D Projects
     </div>
-    <div class="project-card">
-      {#each projectList as item, key}
-        <div>
-          <div class="header-card">
-            {item.name}
-          </div>
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam enim
-            perferendis temporibus, recusandae voluptates placeat quae? Iusto
-            error sint mollitia soluta quibusdam, laborum neque distinctio.
-            Culpa exercitationem aliquam nihil voluptatem.
-          </div>
-        </div>
-      {/each}
+    <div style="background-color:gray">
+      <Slider></Slider>
     </div>
   </div>
   <div class="bio-area" id="bio-area">My Bio</div>
