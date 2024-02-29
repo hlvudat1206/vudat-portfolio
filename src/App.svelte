@@ -69,8 +69,8 @@
     // Insert the new child before the first child
     mainLayer.insertBefore(canvasThree, canvas);
     mainLayer.insertBefore(projectArea, canvasThree);
-    // mainLayer.insertBefore(bioArea, projectArea);
-    // mainLayer.insertBefore(skillArea, projectArea);
+    mainLayer.insertBefore(bioArea, projectArea);
+    mainLayer.insertBefore(skillArea, projectArea);
 
     const axesLayer = viewer.axesDom();
     mainLayer.insertBefore(axesLayer, canvas);
@@ -158,7 +158,17 @@
       <Slider></Slider>
     </div>
   </div>
-  <div class="bio-area" id="bio-area">My Bio</div>
+  <div class="broken-border" id="bio-area">
+    <div class="image-text">
+      I'm Vu Dat, a graduate with a degree in engineering physics and
+      mathematics from Ho Chi Minh City University of Technology. With over 2
+      years of experience in both frontend and backend web development, I've
+      contributed to various 2D and 3D web projects, including traditional
+      management software, 3D real estate, and shopping malls. My focus lies in
+      enhancing user experience by researching and optimizing 3D model
+      materials, lighting, backgrounds, and more for web displays
+    </div>
+  </div>
 
   <div class="skill-area" id="skill-area">My Skill and Experience</div>
 </main>
@@ -228,21 +238,48 @@
     background-color: #74b9e7;
   }
 
-  .left-content {
-    /* height: 100%; */
-  }
-
-  .right-content {
-    /* height: 100%; */
-  }
-
-  .detail-product {
-    /* width: 100%;
-    position: absolute;
-    height: 100%; */
-  }
-
   .project-card {
     display: flex;
+  }
+
+  .bio-area {
+    font-size: 16px;
+    font-weight: 500;
+    position: absolute;
+    left: 10%;
+    top: 30%;
+    text-align: left;
+    width: 25%;
+  }
+
+  .broken-border {
+    width: 300px; /* Adjust as needed */
+    height: 200px; /* Adjust as needed */
+    background-image: url("./public/assets/frame/frame.png");
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    left: 10%;
+    top: 20%;
+    min-width: 400px;
+    min-height: 400px;
+  }
+
+  .image-text {
+    display: flex;
+    color: white;
+    text-align: left;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin: 14%;
+    font-size: 14px;
+  }
+
+  .skill-area {
+    position: absolute;
+    right: 15%;
+    top: 40%;
   }
 </style>

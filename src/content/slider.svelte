@@ -1,4 +1,6 @@
 <script>
+  let currentSlide;
+  $: console.log("currentSlide: ", currentSlide);
   let projectList = [
     {
       id: 1,
@@ -17,12 +19,12 @@
     },
     {
       id: 2,
-      name: "Real Estate Simulation",
+      name: "Real Estate 2",
       description: "",
     },
     {
       id: 3,
-      name: "Doll House",
+      name: "Doll 2",
       description: "",
     },
   ];
@@ -33,7 +35,8 @@
     const prevButton = document.querySelector(".prev-slide");
     const nextButton = document.querySelector(".next-slide");
 
-    let currentSlide = 0;
+    currentSlide = 0;
+    let lastIndexCard = 2; //having 3 element in card
 
     function translateSlider(amount) {
       slider.style.transform = `translateX(-${currentSlide * amount}px)`;
@@ -49,15 +52,17 @@
     function handlePrevClick() {
       currentSlide -= 1;
       if (currentSlide < 0) {
-        currentSlide = slides.length - 1; // Set to last slide for infinite scrolling
+        currentSlide = slides.length - 1 - lastIndexCard; // Set to last slide for infinite scrolling
       }
+
       translateSlider(slides[currentSlide].offsetWidth);
     }
 
     function handleNextClick() {
       currentSlide += 1;
-      if (currentSlide >= slides.length) {
+      if (currentSlide + lastIndexCard >= slides.length) {
         currentSlide = 0; // Set to first slide for infinite scrolling
+        // projectList = projectList.reverse();
       }
       translateSlider(slides[currentSlide].offsetWidth);
     }
@@ -95,24 +100,6 @@
 </div>
 
 <style>
-  /* .slider-container {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .slider {
-    display: flex;
-    transition: transform 0.5s ease;
-  }
-
-  .slide {
-    background-size: cover;
-  }
-
-  .slider-controls {
-   
-  } */
   .slider-controls {
     display: flex;
     align-items: center;
