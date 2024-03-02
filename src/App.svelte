@@ -143,7 +143,7 @@
     flex-direction: column-reverse;"
 >
   <canvas class="full-screen" id="container" bind:this={canvas}> </canvas>
-  <div id="built-projects">
+  <div id="built-projects" style="height:35.333%">
     <div
       style="font-weight: 600;
     font-size: 20px;
@@ -159,6 +159,7 @@
     </div>
   </div>
   <div class="broken-border" id="bio-area">
+    <div class="title-image">Introduction</div>
     <div class="image-text">
       I'm Vu Dat, a graduate with a degree in engineering physics and
       mathematics from Ho Chi Minh City University of Technology. With over 2
@@ -170,7 +171,35 @@
     </div>
   </div>
 
-  <div class="skill-area" id="skill-area">My Skill and Experience</div>
+  <div class="broken-border-v2" id="skill-area">
+    <div class="title-image">My Skill and Experience</div>
+    <div class="image-text">
+      <div>
+        Design and Develop Web App From 2D Web Elements to 3D Web Integrations
+      </div>
+      <br />
+      <div>
+        <div>2D: Frontend: Svelte, Reactjs, Vanilla Javascript</div>
+        <div>Backend: Golang, Nodejs, Git, Gitlab</div>
+      </div>
+      <br />
+      <br />
+      <div>3D: Three js Tool: Blender</div>
+      <div
+        class="icon-box"
+        style="position: absolute;
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;"
+      >
+        <div class="js-icon"></div>
+        <div class="svelte-icon"></div>
+        <div class="threejs-icon"></div>
+        <div class="git-icon"></div>
+      </div>
+    </div>
+  </div>
 </main>
 
 <!-- <SimpleModal
@@ -222,36 +251,6 @@
     z-index: 1000; /* Ensure the button appears on top of the canvas */
   }
 
-  button {
-    padding: 10px;
-    background-color: var(--focus-color);
-    color: white;
-    cursor: pointer;
-    border: var(--focus-border);
-
-    outline: none;
-    overflow: hidden;
-    transition: background-color 0.3s; /* Added transition for smooth color change */
-  }
-
-  button:hover {
-    background-color: #74b9e7;
-  }
-
-  .project-card {
-    display: flex;
-  }
-
-  .bio-area {
-    font-size: 16px;
-    font-weight: 500;
-    position: absolute;
-    left: 10%;
-    top: 30%;
-    text-align: left;
-    width: 25%;
-  }
-
   .broken-border {
     width: 300px; /* Adjust as needed */
     height: 200px; /* Adjust as needed */
@@ -266,20 +265,85 @@
   }
 
   .image-text {
+    height: 100%;
     display: flex;
-    color: white;
+    font-weight: 600;
+    color: #1b4242;
     text-align: left;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    align-content: center;
+    align-content: flex-start;
     margin: 14%;
     font-size: 14px;
+    margin-top: 8%;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   }
 
-  .skill-area {
+  .broken-border-v2 {
+    width: 300px; /* Adjust as needed */
+    height: 200px; /* Adjust as needed */
+    background-image: url("./public/assets/frame/square-frame.png");
+    background-size: cover;
+    background-position: center;
     position: absolute;
-    right: 15%;
-    top: 40%;
+    right: 10%;
+    top: 20%;
+    min-width: 400px;
+    min-height: 400px;
+  }
+  .js-icon {
+    background-image: url("./public/assets/icon/js.svg");
+    width: 30px;
+    height: 30px;
+  }
+  .js-icon:hover {
+    background-color: aliceblue;
+    opacity: 50%;
+    border-radius: 6px;
+  }
+  .svelte-icon {
+    background-image: url("./public/assets/icon/svelte.svg");
+    width: 80px;
+    height: 30px;
+  }
+  .svelte-icon:hover {
+    background-color: aliceblue;
+    opacity: 50%;
+    border-radius: 6px;
+  }
+
+  .threejs-icon {
+    background-image: url("./public/assets/icon/threejs.svg");
+    width: 30px;
+    height: 30px;
+  }
+  .threejs-icon:hover {
+    background-color: aliceblue;
+    opacity: 50%;
+    border-radius: 6px;
+  }
+  .git-icon {
+    background-image: url("./public/assets/icon/git.svg");
+    width: 80px;
+    height: 30px;
+  }
+  .git-icon:hover {
+    background-color: rgb(255, 255, 255);
+    opacity: 50%;
+    border-radius: 6px;
+  }
+  .icon-box {
+    border-radius: 4px;
+    border: 0.25px solid #e9d4d4;
+  }
+
+  .title-image {
+    margin: 0 5% 0 5%;
+    font-size: 18px;
+    color: #f4a536;
+    background-color: #277a7a;
+    border-radius: 10px;
+    border: 2px solid #065ec0;
   }
 </style>

@@ -6,26 +6,31 @@
       id: 1,
       name: "Rendering Tool",
       description: "",
+      path: "./public/assets/project-thumbnail/render.png",
     },
     {
       id: 2,
       name: "Real Estate Simulation",
       description: "",
+      path: "./public/assets/project-thumbnail/smart-home.png",
     },
     {
       id: 3,
       name: "Doll House",
       description: "",
+      path: "./public/assets/project-thumbnail/doll-house.png",
     },
     {
       id: 2,
       name: "Real Estate 2",
       description: "",
+      path: "",
     },
     {
       id: 3,
       name: "Doll 2",
       description: "",
+      path: "",
     },
   ];
 
@@ -80,14 +85,21 @@
   <div class="slider">
     {#each projectList as item, key}
       <div class="slide">
-        <div class="header-card">
-          {item.name}
-        </div>
-        <div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam enim
-          perferendis temporibus, recusandae voluptates placeat quae? Iusto
-          error sint mollitia soluta quibusdam, laborum neque distinctio. Culpa
-          exercitationem aliquam nihil voluptatem.
+        <div style="display:flex">
+          <div class="image-custom">
+            <img src={item.path} height="80%" width="100%" />
+            <div class="image-caption">
+              {item.name}
+            </div>
+          </div>
+          <div class="content">
+            <div>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Voluptatem iure explicabo repellendus, cum totam consequuntur
+              laboriosam quae tempora labore, doloremque magni. Magni porro at,
+              animi perspiciatis sint quaerat nobis doloremque?
+            </div>
+          </div>
         </div>
       </div>
     {/each}
@@ -151,5 +163,36 @@
   .next-slide:hover {
     background-color: rgba(255, 255, 255, 0.5);
     color: black;
+  }
+
+  .image-custom {
+    position: relative;
+
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Image styling */
+  .image-custom img {
+    transition: transform 0.3s ease; /* Smooth transition */
+  }
+
+  /* Image hover effect */
+  .image-custom:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Image caption */
+  .image-caption {
+    /* position: absolute; */
+    bottom: 0;
+    left: 0;
+    /* width: 100%; */
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    color: #fff; /* Text color */
+    font-size: 16px;
   }
 </style>
