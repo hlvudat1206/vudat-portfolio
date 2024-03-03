@@ -5,32 +5,33 @@
     {
       id: 1,
       name: "Rendering Tool",
-      description: "",
-      path: "./public/assets/project-thumbnail/render.png",
+      description:
+        "Introducing rendering capability for certain models, which encompasses reading texture files, setting up lighting, and configuring the environment",
+      path: "./assets/project-thumbnail/render.png",
+      link: "https://hlvudat1206.github.io/render-model-dp",
     },
     {
       id: 2,
       name: "Real Estate Simulation",
-      description: "",
-      path: "./public/assets/project-thumbnail/smart-home.png",
+      description:
+        "Introducing a solution that simulates real estate properties, enabling users to easily interact with them. Users can change the color of the house roof, house wall, rotate the house, and take an automated tour to explore the property.",
+      path: "./assets/project-thumbnail/smart-home.png",
+      link: "https://hlvudat1206.github.io/3dsmarthome",
     },
     {
       id: 3,
       name: "Doll House",
-      description: "",
-      path: "./public/assets/project-thumbnail/doll-house.png",
-    },
-    {
-      id: 2,
-      name: "Real Estate 2",
-      description: "",
-      path: "",
+      description:
+        "Introducing a simulation solution for houses, which includes the ability to move within the house and measure the size of certain furniture items.",
+      path: "./assets/project-thumbnail/doll-house.png",
+      link: "https://sanpham.starglobal3d.com/demo/house3d/",
     },
     {
       id: 3,
-      name: "Doll 2",
-      description: "",
-      path: "",
+      name: "Dat's Portfolio",
+      description: "Introduce some projects experienced by Dat.",
+      path: "./assets/project-thumbnail/doll-house.png",
+      link: "",
     },
   ];
 
@@ -85,19 +86,18 @@
   <div class="slider">
     {#each projectList as item, key}
       <div class="slide">
-        <div style="display:flex">
+        <div style="display:flex; height:100%">
           <div class="image-custom">
-            <img src={item.path} height="80%" width="100%" />
+            <div>
+              <img src={item.path} height="100%" width="100%" />
+            </div>
             <div class="image-caption">
               {item.name}
             </div>
           </div>
           <div class="content">
             <div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptatem iure explicabo repellendus, cum totam consequuntur
-              laboriosam quae tempora labore, doloremque magni. Magni porro at,
-              animi perspiciatis sint quaerat nobis doloremque?
+              {item.description}
             </div>
           </div>
         </div>
@@ -120,6 +120,8 @@
     display: flex;
     overflow: hidden;
     /* Optional, set a maximum width if needed */
+    min-height: 200px;
+    max-height: 250px;
   }
 
   .slider {
@@ -128,7 +130,7 @@
   }
 
   .slide {
-    flex: 0 0 33.33%; /* Set width to 1/3rd of parent element */
+    flex: 0 0 calc(33.33% - 5px);
     margin: 5px 2px 5px 2px; /* Optional spacing between cards */
     border-radius: 5px; /* Add rounded corners */
     background-color: #fff; /* Set background color */
@@ -167,11 +169,13 @@
 
   .image-custom {
     position: relative;
-
     overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+    flex-direction: row-reverse;
+    flex: 70%;
   }
 
   /* Image styling */
@@ -189,10 +193,13 @@
     /* position: absolute; */
     bottom: 0;
     left: 0;
-    /* width: 100%; */
-    padding: 10px;
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
     color: #fff; /* Text color */
     font-size: 16px;
+    width: 100%;
+  }
+
+  .content {
+    flex: 30%;
   }
 </style>

@@ -13,9 +13,11 @@
 
   let viewer;
   let canvas;
+  let isGoMallMode = false;
+  let textButtonView = "Scroll Mode";
 
   let options;
-
+  $: console.log("isGoMallMode: ", isGoMallMode);
   window.VIEWER = {};
 
   if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
@@ -64,21 +66,22 @@
     const projectArea = document.getElementById("built-projects");
     const bioArea = document.getElementById("bio-area");
     const skillArea = document.getElementById("skill-area");
+    const middleArea = document.getElementById("middle-area");
     // Get the first child of the parent
     const canvas = mainLayer.firstChild;
     // Insert the new child before the first child
     mainLayer.insertBefore(canvasThree, canvas);
+    mainLayer.insertBefore(middleArea, canvasThree);
+
     mainLayer.insertBefore(projectArea, canvasThree);
     mainLayer.insertBefore(bioArea, projectArea);
     mainLayer.insertBefore(skillArea, projectArea);
+    mainLayer.insertBefore(middleArea, canvasThree);
 
     const axesLayer = viewer.axesDom();
     mainLayer.insertBefore(axesLayer, canvas);
     const guiLayer = viewer.guiDom();
-    mainLayer.insertBefore(guiLayer, canvas);
-
-    //set style
-    canvasThree.style = "border-radius:25px";
+    // mainLayer.insertBefore(guiLayer, canvas);
   };
 
   function loadModel(path) {
@@ -124,38 +127,63 @@
     // console.log('in fileMap: ',fileMap)
   }
 
+  const onOverViewButton = () => {
+    isGoMallMode = !isGoMallMode;
+
+    // load([
+    //   new THREE.Vector3(16, 4.2, 0),
+    //   new THREE.Vector3(10, -0.4, -0.25),
+
+    //   new THREE.Vector3(-3.5, -1.5, 0.44),
+    //   new THREE.Vector3(-4.4, -1.2, 2.69),
+    //   new THREE.Vector3(0.2, -1.3, 1.3),
+    //   new THREE.Vector3(0.42, 0.2, 3.8),
+    //   new THREE.Vector3(1.0, 1.75, 1.2),
+    //   new THREE.Vector3(1.4, 1.9, -0.5),
+    //   new THREE.Vector3(5.18, 2.1, -0.7),
+    //   new THREE.Vector3(5.7, 1.9, -2.4),
+    //   new THREE.Vector3(2, 2, -2.8),
+    //   new THREE.Vector3(0.5, 1.7, -1.5),
+    // ]);
+  };
+
   onMount(() => {
     init();
   });
 </script>
 
-<div class="view-button">
-  <!-- <button
-    style="--focus-color: {isGoMallMode
-      ? '#1d6291'
-      : '#1f9bed'}; --focus-border: {isGoMallMode ? '2px solid blue' : 'none'}"
-    on:click={onOverViewButton}>{textButtonView}</button
-  > -->
-</div>
 <main
   id="main"
   style="display: flex;
     flex-direction: column-reverse;"
 >
   <canvas class="full-screen" id="container" bind:this={canvas}> </canvas>
-  <div id="built-projects" style="height:35.333%">
+  <div id="built-projects">
     <div
       style="font-weight: 600;
     font-size: 20px;
-    margin-left: 20px;
     text-align: left;
     left: 10px;
-    color: #009999;"
+    color: #009999;
+    background-color:white
+    "
     >
       3D Projects
     </div>
     <div style="background-color:gray">
       <Slider></Slider>
+    </div>
+  </div>
+  <div class="middle-main" id="middle-area">
+    <div class="view-button">
+      <button
+        style="--focus-color: {isGoMallMode
+          ? '#1d6291'
+          : '#9c460e'}; --focus-border: {isGoMallMode
+          ? '2px solid blue'
+          : 'none'}"
+        on:click={onOverViewButton}>{textButtonView}</button
+      >
     </div>
   </div>
   <div class="broken-border" id="bio-area">
@@ -245,14 +273,15 @@
 
   .view-button {
     left: 50%;
-    position: fixed;
-    bottom: 20px;
+    position: absolute;
+
     transform: translate(-50%, -50%);
-    z-index: 1000; /* Ensure the button appears on top of the canvas */
+    z-index: 1000;
+    padding-bottom: 50px;
   }
 
   .broken-border {
-    width: 300px; /* Adjust as needed */
+    width: 500px; /* Adjust as needed */
     height: 200px; /* Adjust as needed */
     background-image: url("./public/assets/frame/frame.png");
     background-size: cover;
@@ -263,21 +292,35 @@
     min-width: 400px;
     min-height: 400px;
   }
+  .middle-main {
+  }
 
+  button {
+    padding: 10px;
+    background-color: var(--focus-color);
+    color: white;
+    cursor: pointer;
+    border: var(--focus-border);
+
+    outline: none;
+    overflow: hidden;
+    transition: background-color 0.3s; /* Added transition for smooth color change */
+  }
+
+  button:hover {
+    background-color: rgb(231, 170, 116);
+  }
   .image-text {
-    height: 100%;
-    display: flex;
     font-weight: 600;
     color: #1b4242;
     text-align: left;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: center;
-    align-content: flex-start;
     margin: 14%;
     font-size: 14px;
-    margin-top: 8%;
+    margin-top: 4%;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #e7e792;
   }
 
   .broken-border-v2 {
