@@ -59,6 +59,28 @@ const IS_IOS = isIOS();
 const Preset = { ASSET_GENERATOR: "assetgenerator" };
 
 Cache.enabled = true;
+const positions = [];
+let splinePointsLength = 5;
+const splineHelperObjects = [];
+
+let transformControl;
+const point = new THREE.Vector3();
+const ARC_SEGMENTS = 200;
+const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+let meshCurve;
+let clock;
+const params = {
+  spline: "GrannyKnot",
+  scale: 4,
+  extrusionSegments: 100,
+  radiusSegments: 3,
+  closed: true,
+  animationView: false,
+  lookAhead: false,
+  cameraHelper: false,
+};
+
+let statusAnimationCamera = false;
 
 export class Viewer {
   constructor(el, options) {
@@ -66,13 +88,21 @@ export class Viewer {
     console.log("this el: ", this.el);
 
     this.options = options;
-
+    this.splines = {};
     this.lights = [];
     this.content = null;
     this.mixer = null;
     this.clips = [];
     this.gui = null;
-
+    this.paramsSplineEditor = {
+      uniform: true,
+      tension: 0.35,
+      centripetal: true,
+      chordal: true,
+      addPoint: this.addPoint,
+      removePoint: this.removePoint,
+      exportSpline: this.exportSpline,
+    };
     this.state = {
       environment:
         options.preset === Preset.ASSET_GENERATOR
@@ -114,7 +144,7 @@ export class Viewer {
 
     this.scene = new Scene();
     this.init();
-
+    this.addPoint();
     const fov =
       options.preset === Preset.ASSET_GENERATOR ? (0.8 * 180) / Math.PI : 60;
     // this.defaultCamera = new PerspectiveCamera( fov, el.clientWidth / el.clientHeight, 0.01, 1000 );
@@ -179,11 +209,130 @@ export class Viewer {
     if (options.kiosk) this.gui.close();
 
     this.animate = this.animate.bind(this);
+    // this.updateSplineOutline = this.updateSplineOutline.bind(this);
+    // this.addSplineObject = this.addSplineObject.bind(this);
+    // this.addSplineObject();
 
     requestAnimationFrame(this.animate);
     window.addEventListener("resize", this.resize.bind(this), false);
 
     this.onWindowResize();
+    this.coordinnateAxis = null;
+
+    this.loadTour([
+      new THREE.Vector3(
+        -4364.295314571153,
+        -17309.225182491606,
+        20595.708314620035
+      ),
+      new THREE.Vector3(
+        14838.287554076516,
+        -14875.496624187701,
+        22700.798745904816
+      ),
+
+      new THREE.Vector3(
+        2610.677073859876,
+        -13552.224512932811,
+        22834.73290624967
+      ),
+      new THREE.Vector3(
+        -15767.585693359375,
+        -15081.89032653495,
+        30691.64747693053
+      ),
+      new THREE.Vector3(
+        -33177.84769987144,
+        -16455.4158105302,
+        22423.396457589824
+      ),
+    ]);
+
+    clock = new THREE.Clock();
+
+    /*******
+     * Curves
+     *********/
+
+    for (let i = 0; i < splinePointsLength; i++) {
+      this.addSplineObject(positions[i]);
+    }
+
+    positions.length = 0;
+
+    for (let i = 0; i < splinePointsLength; i++) {
+      positions.push(splineHelperObjects[i].position);
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(new Float32Array(ARC_SEGMENTS * 3), 3)
+    );
+
+    let curveSplineEditor = new THREE.CatmullRomCurve3(positions);
+
+    curveSplineEditor = new THREE.CatmullRomCurve3(positions);
+    curveSplineEditor.curveType = "centripetal";
+    curveSplineEditor.mesh = new THREE.Line(
+      geometry.clone(),
+      new THREE.LineBasicMaterial({
+        color: 0x00ff00,
+        opacity: 0.35,
+        visible: true,
+      })
+    );
+
+    curveSplineEditor.mesh.castShadow = true;
+    this.splines.centripetal = curveSplineEditor;
+
+    curveSplineEditor = new THREE.CatmullRomCurve3(positions);
+    curveSplineEditor.curveType = "chordal";
+    curveSplineEditor.mesh = new THREE.Line(
+      geometry.clone(),
+      new THREE.LineBasicMaterial({
+        color: 0x0000ff,
+        opacity: 0.35,
+        visible: true,
+      })
+    );
+
+    curveSplineEditor.mesh.castShadow = true;
+    this.splines.chordal = curveSplineEditor;
+
+    curveSplineEditor.curveType = "catmullrom";
+    curveSplineEditor.mesh = new THREE.Line(
+      geometry.clone(),
+      new THREE.LineBasicMaterial({
+        color: 0xff0000,
+        opacity: 1,
+        visible: true,
+      })
+    );
+    curveSplineEditor.mesh.castShadow = true;
+    this.splines.uniform = curveSplineEditor;
+
+    for (const k in this.splines) {
+      const spline = this.splines[k];
+      // scene.add( spline.mesh );
+    }
+    const geomytryCurve = new THREE.TubeGeometry(
+      curveSplineEditor,
+      100,
+      0.6,
+      1,
+      true
+    );
+
+    const materialCurve = new THREE.MeshBasicMaterial({
+      wireframe: true,
+      color: 0xff0000,
+      visible: true,
+    });
+    // meshCurve = new THREE.Mesh(geomytryCurve, materialCurve);
+    meshCurve = new THREE.Mesh(geomytryCurve, materialCurve);
+    // meshCurve.position.set(20, 10, 0);
+    this.scene.add(meshCurve);
   }
   init() {}
 
@@ -199,6 +348,117 @@ export class Viewer {
     return this.guiWrap;
   }
 
+  getCoordinate() {
+    this.raycaster.setFromCamera(this.mouse, this.defaultCamera);
+
+    const intersects = this.raycaster.intersectObject(this.scene, true);
+    if (intersects.length > 0) {
+      const selectedObject = intersects[0].object;
+      console.log("okok: ", intersects[0].point);
+      this.coordinnateAxis = intersects[0].point;
+    }
+    return this.coordinnateAxis;
+  }
+
+  addSplineObject(position) {
+    console.log("pass addSplineObject");
+    const material = new THREE.MeshLambertMaterial({
+      color: Math.random() * 0xffffff,
+      visible: true,
+    });
+    const object = new THREE.Mesh(geometry, material);
+
+    if (position) {
+      object.position.copy(position);
+    } else {
+      // object.position.x = Math.random() * 10000 - 500;
+      // object.position.y = Math.random() * 6000;
+      // object.position.z = Math.random() * 8000 - 400;
+      object.position.x = Math.random() * 10 - 5;
+      // object.position.y = Math.random() * 600 - 400;
+      object.position.y = Math.random() * 10;
+
+      object.position.z = Math.random() * 8 - 10;
+    }
+
+    object.castShadow = true;
+    object.receiveShadow = true;
+    this.scene.add(object);
+    splineHelperObjects.push(object);
+    return object;
+  }
+
+  addPoint() {
+    console.log("positions: ", positions);
+    splinePointsLength++;
+
+    positions.push(this.addSplineObject && this.addSplineObject().position);
+    console.log("positions: ", positions);
+    this.updateSplineOutline;
+
+    this.render;
+  }
+
+  removePoint() {
+    if (splinePointsLength <= 4) {
+      return;
+    }
+
+    const point = splineHelperObjects.pop();
+    splinePointsLength--;
+    positions.pop();
+
+    if (transformControl.object === point) transformControl.detach();
+    this.scene.remove(point);
+
+    this.updateSplineOutline();
+
+    this.render();
+  }
+
+  exportSpline() {
+    const strplace = [];
+
+    for (let i = 0; i < splinePointsLength; i++) {
+      const p = splineHelperObjects[i].position;
+      strplace.push(`new THREE.Vector3(${p.x}, ${p.y}, ${p.z})`);
+    }
+
+    console.log(strplace.join(",\n"));
+    const code = "[" + strplace.join(",\n\t") + "]";
+    prompt("copy and paste code", code);
+  }
+
+  loadTour(new_positions) {
+    while (new_positions.length > positions.length) {
+      this.addPoint();
+    }
+
+    while (new_positions.length < positions.length) {
+      this.removePoint();
+    }
+
+    for (let i = 0; i < positions.length; i++) {
+      positions[i].copy(new_positions[i]);
+    }
+
+    this.updateSplineOutline();
+  }
+
+  updateCamera() {
+    const time = clock.getElapsedTime();
+    console.log("in ra time: ", time);
+    const looptime = 30;
+    const t = (time % looptime) / looptime;
+    console.log("in ra t: ", t);
+    const t2 = ((time + 0.1) % looptime) / looptime;
+    console.log("in ra t2: ", t2);
+
+    const pos = meshCurve.geometry.parameters.path.getPointAt(t);
+    const pos2 = meshCurve.geometry.parameters.path.getPointAt(t2);
+    this.defaultCamera.position.copy(pos);
+    this.defaultCamera.lookAt(pos2);
+  }
   onWindowResize() {
     const { clientHeight, clientWidth } = this.el.parentElement;
 
@@ -216,12 +476,35 @@ export class Viewer {
     this.stats.update();
     this.mixer && this.mixer.update(dt);
     this.render();
-
     this.prevTime = time;
 
     // this.render();
 
     TWEEN.update();
+    if (statusAnimationCamera) {
+      this.updateCamera();
+    }
+
+    this.splines.uniform.mesh.visible = this.paramsSplineEditor.uniform;
+    this.splines.centripetal.mesh.visible = this.paramsSplineEditor.centripetal;
+    this.splines.chordal.mesh.visible = this.paramsSplineEditor.chordal;
+  }
+
+  updateSplineOutline() {
+    for (const k in this.splines) {
+      const spline = this.splines[k];
+
+      const splineMesh = spline.mesh;
+      const position = splineMesh.geometry.attributes.position;
+
+      for (let i = 0; i < ARC_SEGMENTS; i++) {
+        const t = i / (ARC_SEGMENTS - 1);
+        spline.getPoint(t, point);
+        position.setXYZ(i, point.x, point.y, point.z);
+      }
+
+      position.needsUpdate = true;
+    }
   }
 
   render() {
@@ -726,6 +1009,30 @@ export class Viewer {
     perfLi.appendChild(this.stats.dom);
     perfLi.classList.add("gui-stats");
     // perfFolder.__ul.appendChild( perfLi );
+
+    const folderCamera = gui.addFolder("Auto Tour");
+    folderCamera.add(params, "animationView").onChange(function () {
+      // animateCamera();
+      statusAnimationCamera = !statusAnimationCamera;
+      console.log(" in ra statusAnimationCamera: ", statusAnimationCamera);
+    });
+
+    //**************************************************//
+    //enable spline editor
+    gui.add(this.paramsSplineEditor, "uniform").onChange(this.render);
+    gui
+      .add(this.paramsSplineEditor, "tension", 0, 1)
+      .step(0.01)
+      .onChange(function (value) {
+        this.splines.uniform.tension = value;
+        this.updateSplineOutline();
+        this.render();
+      });
+    gui.add(this.paramsSplineEditor, "centripetal").onChange(this.render);
+    gui.add(this.paramsSplineEditor, "chordal").onChange(this.render);
+    gui.add(this.paramsSplineEditor, "addPoint");
+    gui.add(this.paramsSplineEditor, "removePoint");
+    gui.add(this.paramsSplineEditor, "exportSpline");
 
     this.guiWrap = document.createElement("div");
     this.el.appendChild(this.guiWrap);

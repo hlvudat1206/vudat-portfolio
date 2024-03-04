@@ -6,6 +6,7 @@
   import queryString from "@js/query-string-main/index.js";
   import WebGL from "@js/WebGL.js";
   import Slider from "./content/slider.svelte";
+  import { TransformControls } from "@js/TransformControls.js";
 
   let scene;
   // let selectedModel = "src/models/thoitrang_nam_1fittingroom.gltf";
@@ -81,7 +82,7 @@
     const axesLayer = viewer.axesDom();
     mainLayer.insertBefore(axesLayer, canvas);
     const guiLayer = viewer.guiDom();
-    // mainLayer.insertBefore(guiLayer, canvas);
+    mainLayer.insertBefore(guiLayer, canvas);
   };
 
   function loadModel(path) {
@@ -129,6 +130,34 @@
 
   const onOverViewButton = () => {
     isGoMallMode = !isGoMallMode;
+    // viewer.loadTour([
+    //   new THREE.Vector3(
+    //     -4364.295314571153,
+    //     -17309.225182491606,
+    //     20595.708314620035
+    //   ),
+    //   new THREE.Vector3(
+    //     14838.287554076516,
+    //     -14875.496624187701,
+    //     22700.798745904816
+    //   ),
+
+    //   new THREE.Vector3(
+    //     2610.677073859876,
+    //     -13552.224512932811,
+    //     22834.73290624967
+    //   ),
+    //   new THREE.Vector3(
+    //     -15767.585693359375,
+    //     -15081.89032653495,
+    //     30691.64747693053
+    //   ),
+    //   new THREE.Vector3(
+    //     -33177.84769987144,
+    //     -16455.4158105302,
+    //     22423.396457589824
+    //   ),
+    // ]);
 
     // load([
     //   new THREE.Vector3(16, 4.2, 0),
@@ -146,7 +175,10 @@
     //   new THREE.Vector3(0.5, 1.7, -1.5),
     // ]);
   };
-
+  const interactObject = () => {
+    console.log("ckick click");
+    console.log("viewer.getCoordinate(): ", viewer.getCoordinate());
+  };
   onMount(() => {
     init();
   });
@@ -156,6 +188,7 @@
   id="main"
   style="display: flex;
     flex-direction: column-reverse;"
+  on:click={interactObject}
 >
   <canvas class="full-screen" id="container" bind:this={canvas}> </canvas>
   <div id="built-projects">
