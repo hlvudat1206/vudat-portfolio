@@ -80,6 +80,11 @@
     // Initial setup
     translateSlider(slides[currentSlide].offsetWidth);
   });
+
+  const openNewTab = (item) => {
+    console.log("open new tab");
+    // window.location = item.link;
+  };
 </script>
 
 <div class="slider-container">
@@ -88,7 +93,7 @@
       <div class="slide">
         <div style="display:flex; height:100%">
           <div class="image-custom">
-            <div>
+            <div on:click={openNewTab(item)}>
               <img src={item.path} height="100%" width="100%" />
             </div>
             <div class="image-caption">
@@ -175,7 +180,7 @@
     flex-wrap: wrap;
     height: 100%;
     flex-direction: row-reverse;
-    flex: 70%;
+    flex: 60%;
   }
 
   /* Image styling */
@@ -186,6 +191,10 @@
   /* Image hover effect */
   .image-custom:hover img {
     transform: scale(1.05);
+  }
+  .image-custom:hover {
+    background-color: #efd699;
+    cursor: pointer;
   }
 
   /* Image caption */
@@ -200,6 +209,8 @@
   }
 
   .content {
-    flex: 30%;
+    flex: 40%;
+    font-weight: 500;
+    background-color: #efd699;
   }
 </style>

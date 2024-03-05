@@ -158,22 +158,6 @@
     //     22423.396457589824
     //   ),
     // ]);
-
-    // load([
-    //   new THREE.Vector3(16, 4.2, 0),
-    //   new THREE.Vector3(10, -0.4, -0.25),
-
-    //   new THREE.Vector3(-3.5, -1.5, 0.44),
-    //   new THREE.Vector3(-4.4, -1.2, 2.69),
-    //   new THREE.Vector3(0.2, -1.3, 1.3),
-    //   new THREE.Vector3(0.42, 0.2, 3.8),
-    //   new THREE.Vector3(1.0, 1.75, 1.2),
-    //   new THREE.Vector3(1.4, 1.9, -0.5),
-    //   new THREE.Vector3(5.18, 2.1, -0.7),
-    //   new THREE.Vector3(5.7, 1.9, -2.4),
-    //   new THREE.Vector3(2, 2, -2.8),
-    //   new THREE.Vector3(0.5, 1.7, -1.5),
-    // ]);
   };
   const interactObject = () => {
     console.log("ckick click");

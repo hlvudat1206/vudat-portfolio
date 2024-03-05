@@ -60,7 +60,7 @@ const Preset = { ASSET_GENERATOR: "assetgenerator" };
 
 Cache.enabled = true;
 const positions = [];
-let splinePointsLength = 5;
+let splinePointsLength = 17;
 const splineHelperObjects = [];
 
 let transformControl;
@@ -209,9 +209,6 @@ export class Viewer {
     if (options.kiosk) this.gui.close();
 
     this.animate = this.animate.bind(this);
-    // this.updateSplineOutline = this.updateSplineOutline.bind(this);
-    // this.addSplineObject = this.addSplineObject.bind(this);
-    // this.addSplineObject();
 
     requestAnimationFrame(this.animate);
     window.addEventListener("resize", this.resize.bind(this), false);
@@ -221,32 +218,109 @@ export class Viewer {
 
     this.loadTour([
       new THREE.Vector3(
-        -4364.295314571153,
-        -17309.225182491606,
-        20595.708314620035
+        -24138.778141520143,
+        -18967.95934670717 + 5000,
+        30133.582955808495
       ),
       new THREE.Vector3(
-        14838.287554076516,
-        -14875.496624187701,
-        22700.798745904816
+        -44554.51338274434,
+        -20886.03845362944 + 5000,
+        29088.9600103201
       ),
 
       new THREE.Vector3(
-        2610.677073859876,
-        -13552.224512932811,
-        22834.73290624967
+        -20776.46098898326,
+        -18371.18307334151 + 5000,
+        21060.309229440405
       ),
       new THREE.Vector3(
-        -15767.585693359375,
-        -15081.89032653495,
-        30691.64747693053
+        -41306.655004876426,
+        -21458.631585018546 + 5000,
+        -7643.323113432373
       ),
       new THREE.Vector3(
-        -33177.84769987144,
-        -16455.4158105302,
-        22423.396457589824
+        -38171.23361372349,
+        -21458.630030902867 + 5000,
+        1895.7708979931322
+      ),
+      new THREE.Vector3(
+        34898.305636595294,
+        -20822.33616378372 + 5000,
+        10664.01215605937
+      ),
+
+      new THREE.Vector3(
+        40550.22601388812,
+        -21458.63377898846 + 5000,
+        -21109.814481413716
+      ),
+      new THREE.Vector3(
+        -27418.045414705295,
+        -6129.163879225471 + 5000,
+        -24142.018466327514
+      ),
+      new THREE.Vector3(
+        -25092.083661112356,
+        -6223.240415207472 + 5000,
+        -15322.282379738754
+      ),
+      new THREE.Vector3(
+        7696.4951171875,
+        -14788.364970949639 + 5000,
+        -36911.96837610646
+      ),
+      new THREE.Vector3(
+        -10590.615061511431,
+        -7091.7883981059695 + 5000,
+        -20999.419927862124
+      ),
+      new THREE.Vector3(
+        -7075.140464385964,
+        -11809.714514572786 + 5000,
+        -20249.902324031165
+      ),
+      new THREE.Vector3(
+        15208.031028360652,
+        -13523.094756855979 + 5000,
+        -9142.266128075717
+      ),
+      new THREE.Vector3(
+        14057.831702163443,
+        -12799.576036216149 + 5000,
+        -2782.3077755756676
+      ),
+      new THREE.Vector3(
+        2890.076915281861,
+        -8409.767480255783 + 5000,
+        4686.772721017187
+      ),
+      new THREE.Vector3(
+        11046.861536938228,
+        -8337.40049049347 + 5000,
+        20589.472311487152
+      ),
+      new THREE.Vector3(
+        10749.19581263907,
+        -12680.255275734644 + 5000,
+        20589.473019028002
+      ),
+      new THREE.Vector3(
+        -3773.701362735512,
+        -15128.628223960328 + 5000,
+        22278.61275195994
+      ),
+      new THREE.Vector3(
+        3978.1315712139476,
+        -18482.190528777915 + 5000,
+        8226.787666603806
       ),
     ]);
+
+    const geometry2 = new THREE.BoxGeometry(1, 1, 1);
+    const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry2, material2);
+    cube.scale.set(3, 3, 3);
+    this.scene.add(cube);
 
     clock = new THREE.Clock();
 
@@ -314,7 +388,7 @@ export class Viewer {
 
     for (const k in this.splines) {
       const spline = this.splines[k];
-      // scene.add( spline.mesh );
+      // this.scene.add( spline.mesh );
     }
     const geomytryCurve = new THREE.TubeGeometry(
       curveSplineEditor,
@@ -362,6 +436,7 @@ export class Viewer {
 
   addSplineObject(position) {
     console.log("pass addSplineObject");
+    console.log("pos1: ", position);
     const material = new THREE.MeshLambertMaterial({
       color: Math.random() * 0xffffff,
       visible: true,
@@ -371,9 +446,6 @@ export class Viewer {
     if (position) {
       object.position.copy(position);
     } else {
-      // object.position.x = Math.random() * 10000 - 500;
-      // object.position.y = Math.random() * 6000;
-      // object.position.z = Math.random() * 8000 - 400;
       object.position.x = Math.random() * 10 - 5;
       // object.position.y = Math.random() * 600 - 400;
       object.position.y = Math.random() * 10;
@@ -381,6 +453,7 @@ export class Viewer {
       object.position.z = Math.random() * 8 - 10;
     }
 
+    object.scale.set(12, 12, 12);
     object.castShadow = true;
     object.receiveShadow = true;
     this.scene.add(object);
@@ -389,11 +462,9 @@ export class Viewer {
   }
 
   addPoint() {
-    console.log("positions: ", positions);
     splinePointsLength++;
 
     positions.push(this.addSplineObject && this.addSplineObject().position);
-    console.log("positions: ", positions);
     this.updateSplineOutline;
 
     this.render;
@@ -448,7 +519,7 @@ export class Viewer {
   updateCamera() {
     const time = clock.getElapsedTime();
     console.log("in ra time: ", time);
-    const looptime = 30;
+    const looptime = 100;
     const t = (time % looptime) / looptime;
     console.log("in ra t: ", t);
     const t2 = ((time + 0.1) % looptime) / looptime;
