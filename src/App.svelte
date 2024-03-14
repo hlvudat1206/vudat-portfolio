@@ -178,7 +178,7 @@
   on:click={interactObject}
 >
   <canvas class="full-screen" id="container" bind:this={canvas}> </canvas>
-  <div id="built-projects">
+  <div id="built-projects" style="position:absolute">
     <div
       style="font-weight: 600;
     font-size: 20px;
