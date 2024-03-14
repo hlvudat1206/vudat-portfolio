@@ -11,6 +11,9 @@
   let scene;
   // let selectedModel = "src/models/thoitrang_nam_1fittingroom.gltf";
   let selectedModel = "./assets/models/cyberCity/scene.gltf";
+  // let selectedModel = "./assets/models/livingRoom/scene.gltf";
+
+  // let selectedModel = "./assets/models/motobike/motorbike.gltf";
 
   let viewer;
   let canvas;
@@ -45,7 +48,7 @@
     viewer = new Viewer(container, options);
     loadModel(selectedModel);
 
-    // //create planeMesh
+    // // //create planeMesh
     // const visiablePlane = new THREE.Mesh(
     //   new THREE.PlaneGeometry(400, 200),
     //   new THREE.MeshBasicMaterial({
@@ -56,11 +59,12 @@
     // );
 
     // visiablePlane.rotateX(Math.PI / 2);
+    // // visiablePlane.scale.set(1000, 1000, 1000);
     // visiablePlane.name = "ground";
     // visiablePlane.position.set(0, -3.5, 0);
 
     // viewer.createObject(visiablePlane);
-
+    /////
     const mainLayer = document.getElementById("main");
     // Create a new child element
     const canvasThree = viewer.rendererDom();
@@ -112,7 +116,6 @@
     let fileURL = path;
     viewer
       .load(fileURL)
-
       .catch((e) => {
         console.log("err: ", e);
         return onError(e);
@@ -124,8 +127,8 @@
         console.log("gltff: ", gltf);
         // cleanup();
       });
-    // console.log('in rootPath: ',rootPath)
-    // console.log('in fileMap: ',fileMap)
+    // console.log("in rootPath: ", rootPath);
+    // console.log("in fileMap: ", fileMap);
   }
 
   const onOverViewButton = () => {

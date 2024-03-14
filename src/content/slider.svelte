@@ -80,11 +80,6 @@
     // Initial setup
     translateSlider(slides[currentSlide].offsetWidth);
   });
-
-  const openNewTab = (item) => {
-    console.log("open new tab");
-    // window.location = item.link;
-  };
 </script>
 
 <div class="slider-container">
@@ -93,7 +88,7 @@
       <div class="slide">
         <div style="display:flex; height:100%">
           <div class="image-custom">
-            <div on:click={openNewTab(item)}>
+            <div>
               <img src={item.path} height="100%" width="100%" />
             </div>
             <div class="image-caption">

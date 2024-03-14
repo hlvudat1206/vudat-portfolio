@@ -36,10 +36,9 @@ import { GUI } from "@build/dat.gui.module.js";
 import { TWEEN } from "@js/tween.module.min.js";
 
 import { environments } from "@public/assets/environment/index.js";
-// import { createBackground } from '../lib/three-vignette.js';
+import { TransformControls } from "@js/transFormControls.js";
 
-// let scene, camera, renderer;
-// let hemiLight, hemiLight_helper;
+// import { createBackground } from '../lib/three-vignette.js';
 
 let strDownloadMime = "image/octet-stream";
 
@@ -61,9 +60,7 @@ const Preset = { ASSET_GENERATOR: "assetgenerator" };
 Cache.enabled = true;
 const positions = [];
 let splinePointsLength = 17;
-const splineHelperObjects = [];
 
-let transformControl;
 const point = new THREE.Vector3();
 const ARC_SEGMENTS = 200;
 const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
@@ -81,6 +78,11 @@ const params = {
 };
 
 let statusAnimationCamera = false;
+let cube;
+
+const onDownPosition = new THREE.Vector2();
+const onUpPosition = new THREE.Vector2();
+const pointer = new THREE.Vector2();
 
 export class Viewer {
   constructor(el, options) {
@@ -99,9 +101,9 @@ export class Viewer {
       tension: 0.35,
       centripetal: true,
       chordal: true,
-      addPoint: this.addPoint,
-      removePoint: this.removePoint,
-      exportSpline: this.exportSpline,
+      addPoint: this.addPoint.bind(this),
+      removePoint: this.removePoint.bind(this),
+      exportSpline: this.exportSpline.bind(this),
     };
     this.state = {
       environment:
@@ -132,6 +134,7 @@ export class Viewer {
 
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
+    this.pointer = new THREE.Vector2();
     this.moveMouse = new THREE.Vector2();
     this.prevTime = 0;
 
@@ -144,7 +147,6 @@ export class Viewer {
 
     this.scene = new Scene();
     this.init();
-    this.addPoint();
     const fov =
       options.preset === Preset.ASSET_GENERATOR ? (0.8 * 180) / Math.PI : 60;
     // this.defaultCamera = new PerspectiveCamera( fov, el.clientWidth / el.clientHeight, 0.01, 1000 );
@@ -182,7 +184,6 @@ export class Viewer {
       this.defaultCamera,
       this.renderer.domElement
     );
-
     this.controls.screenSpacePanning = true;
 
     // this.vignette = createBackground({
@@ -209,12 +210,46 @@ export class Viewer {
     if (options.kiosk) this.gui.close();
 
     this.animate = this.animate.bind(this);
-
     requestAnimationFrame(this.animate);
+
     window.addEventListener("resize", this.resize.bind(this), false);
+
+    document.addEventListener(
+      "pointerdown",
+      this.onPointerDownSplineEditor.bind(this)
+    );
+    document.addEventListener(
+      "pointerup",
+      this.onPointerUpSplineEditor.bind(this)
+    );
+    document.addEventListener(
+      "pointermove",
+      this.onPointerMoveSplineEditor.bind(this)
+    );
 
     this.onWindowResize();
     this.coordinnateAxis = null;
+    this.transFormControl = null;
+    this.splineHelperObjects = [];
+
+    // this.updateLights();
+
+    this.transFormControl = new TransformControls(
+      this.defaultCamera,
+      this.renderer.domElement
+    );
+
+    this.transFormControl.addEventListener("change", this.render.bind(this));
+    this.transFormControl.addEventListener(
+      "dragging-changed",
+      this.dragChange.bind(this)
+    );
+    this.scene.add(this.transFormControl);
+
+    this.transFormControl.addEventListener(
+      "objectChange",
+      this.objectChange.bind(this)
+    );
 
     this.loadTour([
       new THREE.Vector3(
@@ -316,26 +351,23 @@ export class Viewer {
       ),
     ]);
 
-    const geometry2 = new THREE.BoxGeometry(1, 1, 1);
-    const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const cube = new THREE.Mesh(geometry2, material2);
-    cube.scale.set(3, 3, 3);
-    this.scene.add(cube);
-
     clock = new THREE.Clock();
 
     /*******
      * Curves
      *********/
-
+    console.log("splinePointsLength: ", splinePointsLength);
     for (let i = 0; i < splinePointsLength; i++) {
+      console.log("positions[i]: ", i);
+      console.log("positions3", positions[i]);
       this.addSplineObject(positions[i]);
     }
 
     positions.length = 0;
-
+    //Giả sử để để lấy form Object
     for (let i = 0; i < splinePointsLength; i++) {
-      positions.push(splineHelperObjects[i].position);
+      console.log("this.splineHelperObjects[i]: ", this.splineHelperObjects[i]);
+      positions.push(this.splineHelperObjects[i].position);
     }
 
     const geometry = new THREE.BufferGeometry();
@@ -435,29 +467,32 @@ export class Viewer {
   }
 
   addSplineObject(position) {
-    console.log("pass addSplineObject");
-    console.log("pos1: ", position);
     const material = new THREE.MeshLambertMaterial({
       color: Math.random() * 0xffffff,
       visible: true,
     });
+
     const object = new THREE.Mesh(geometry, material);
 
     if (position) {
+      console.log("position5: ", position);
       object.position.copy(position);
     } else {
-      object.position.x = Math.random() * 10 - 5;
-      // object.position.y = Math.random() * 600 - 400;
-      object.position.y = Math.random() * 10;
+      console.log("nhay vao day");
+      // object.position.x = Math.random() * 30000 - 5;
+      // // object.position.y = Math.random() * 600 - 400;
+      // object.position.y = Math.random() * 30000;
 
-      object.position.z = Math.random() * 8 - 10;
+      // object.position.z = Math.random() * 8 - 3000;
     }
 
-    object.scale.set(12, 12, 12);
     object.castShadow = true;
     object.receiveShadow = true;
+    console.log("object: ", object);
+
+    object.scale.set(8000, 8000, 8000);
     this.scene.add(object);
-    splineHelperObjects.push(object);
+    this.splineHelperObjects.push(object);
     return object;
   }
 
@@ -466,7 +501,6 @@ export class Viewer {
 
     positions.push(this.addSplineObject && this.addSplineObject().position);
     this.updateSplineOutline;
-
     this.render;
   }
 
@@ -475,11 +509,11 @@ export class Viewer {
       return;
     }
 
-    const point = splineHelperObjects.pop();
+    const point = this.splineHelperObjects.pop();
     splinePointsLength--;
     positions.pop();
 
-    if (transformControl.object === point) transformControl.detach();
+    if (this.transFormControl.object === point) this.transFormControl.detach();
     this.scene.remove(point);
 
     this.updateSplineOutline();
@@ -487,11 +521,58 @@ export class Viewer {
     this.render();
   }
 
+  onPointerDownSplineEditor(event) {
+    onDownPosition.x = event.clientX;
+    onDownPosition.y = event.clientY;
+  }
+
+  onPointerUpSplineEditor(event) {
+    onUpPosition.x = event.clientX;
+    onUpPosition.y = event.clientY;
+    if (this.transFormControl === null) {
+    } else {
+      if (onDownPosition.distanceTo(onUpPosition) === 0)
+        this.transFormControl.detach();
+    }
+  }
+
+  onPointerMoveSplineEditor(event) {
+    this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    this.raycaster.setFromCamera(this.pointer, this.defaultCamera);
+    console.log("this scene: ", this.splineHelperObjects);
+    const intersects = this.raycaster.intersectObjects(
+      this.splineHelperObjects,
+      false
+    );
+    console.log("intersects: ", intersects);
+    if (intersects.length > 0) {
+      const object = intersects[0].object;
+      if (this.transFormControl === null) {
+      } else {
+        if (object !== this.transFormControl.object) {
+          this.transFormControl.attach(object);
+        }
+      }
+    } else {
+      console.log("cannot into");
+    }
+  }
+
+  dragChange(event) {
+    this.controls.enabled = !event.value;
+  }
+
+  objectChange() {
+    this.updateSplineOutline;
+  }
+
   exportSpline() {
     const strplace = [];
 
     for (let i = 0; i < splinePointsLength; i++) {
-      const p = splineHelperObjects[i].position;
+      const p = this.splineHelperObjects[i].position;
       strplace.push(`new THREE.Vector3(${p.x}, ${p.y}, ${p.z})`);
     }
 
@@ -501,6 +582,7 @@ export class Viewer {
   }
 
   loadTour(new_positions) {
+    console.log("new_positions: ", new_positions, positions);
     while (new_positions.length > positions.length) {
       this.addPoint();
     }
@@ -512,18 +594,15 @@ export class Viewer {
     for (let i = 0; i < positions.length; i++) {
       positions[i].copy(new_positions[i]);
     }
-
+    console.log("positions2: ", positions);
     this.updateSplineOutline();
   }
 
   updateCamera() {
     const time = clock.getElapsedTime();
-    console.log("in ra time: ", time);
     const looptime = 100;
     const t = (time % looptime) / looptime;
-    console.log("in ra t: ", t);
     const t2 = ((time + 0.1) % looptime) / looptime;
-    console.log("in ra t2: ", t2);
 
     const pos = meshCurve.geometry.parameters.path.getPointAt(t);
     const pos2 = meshCurve.geometry.parameters.path.getPointAt(t2);
@@ -549,16 +628,14 @@ export class Viewer {
     this.render();
     this.prevTime = time;
 
-    // this.render();
-
     TWEEN.update();
     if (statusAnimationCamera) {
       this.updateCamera();
     }
 
-    this.splines.uniform.mesh.visible = this.paramsSplineEditor.uniform;
-    this.splines.centripetal.mesh.visible = this.paramsSplineEditor.centripetal;
-    this.splines.chordal.mesh.visible = this.paramsSplineEditor.chordal;
+    // this.splines.uniform.mesh.visible = this.paramsSplineEditor.uniform;
+    // this.splines.centripetal.mesh.visible = this.paramsSplineEditor.centripetal;
+    // this.splines.chordal.mesh.visible = this.paramsSplineEditor.chordal;
   }
 
   updateSplineOutline() {
@@ -609,11 +686,6 @@ export class Viewer {
   };
 
   load(url) {
-    console.log("url::: ", url);
-
-    console.log("in ra loading2");
-
-    console.log("in ra url: ", url);
     // console.log('in ra rootpath: ',rootPath)
     const baseURL = LoaderUtils.extractUrlBase(url);
 
@@ -651,8 +723,6 @@ export class Viewer {
       loader.load(
         url,
         (gltf) => {
-          console.log("in ra url 2: ", url);
-          console.log("window: ", window);
           window.VIEWER.json = gltf;
 
           const scene = gltf.scene || gltf.scenes[0];
@@ -687,13 +757,15 @@ export class Viewer {
    */
   setContent(object, clips) {
     this.clear();
-
     const box = new Box3().setFromObject(object);
     const size = box.getSize(new Vector3()).length();
+    console.log("size: ", size);
+    // const size = 15;
+
     const center = box.getCenter(new Vector3());
-
+    // let box, size, center;
+    console.log("center: ", center);
     this.controls.reset();
-
     object.position.x += object.position.x - center.x;
     object.position.y += object.position.y - center.y;
     object.position.z += object.position.z - center.z;
@@ -703,10 +775,13 @@ export class Viewer {
     this.defaultCamera.far = size * 100;
     this.defaultCamera.updateProjectionMatrix();
 
+    ///
     if (this.options.cameraPosition) {
       this.defaultCamera.position.fromArray(this.options.cameraPosition);
       this.defaultCamera.lookAt(new Vector3());
+      console.log("00000");
     } else {
+      console.log("111111");
       this.defaultCamera.position.copy(center);
       this.defaultCamera.position.x += size / 2.0;
       this.defaultCamera.position.y += size / 5.0;
@@ -727,15 +802,11 @@ export class Viewer {
 
     this.scene.add(object);
 
-    //   const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    //  const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    //  const cube = new THREE.Mesh( geometry, material );
-    //  this.scene.add( cube );
-
     this.content = object;
 
     this.state.punctualLights = true;
 
+    //** màu */
     this.content.traverse((node) => {
       if (node.isLight) {
         this.state.punctualLights = false;
@@ -791,8 +862,9 @@ export class Viewer {
    * @param {string} name
    */
   setCamera(name) {
+    console.log("set camera");
     if (name === DEFAULT_CAMERA) {
-      this.controls.enabled = true;
+      this.controls.enabled = true; //      this.controls.enabled = true;
       this.activeCamera = this.defaultCamera;
     } else {
       this.controls.enabled = false;
