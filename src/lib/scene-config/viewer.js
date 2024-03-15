@@ -232,7 +232,7 @@ export class Viewer {
     this.splineHelperObjects = [];
 
     // this.updateLights();
-    this.splinePointsLength = 1;
+    this.splinePointsLength = 2;
 
     this.transFormControl = new TransformControls(
       this.defaultCamera,
@@ -250,21 +250,20 @@ export class Viewer {
       "objectChange",
       this.objectChange.bind(this)
     );
-    this.loadTour([
-      new THREE.Vector3(-52315.51338274434, -15886.03845362944, 4376),
-    ]);
 
     clock = new THREE.Clock();
-
+    console.log("init pass");
     /*******
      * Curves
      *********/
     for (let i = 0; i < this.splinePointsLength; i++) {
+      console.log("i la");
       this.addSplineObject(positions[i]);
     }
 
     positions.length = 0;
     //Giả sử để để lấy form Object
+    console.log("this.splinePointsLength: ", this.splinePointsLength);
     for (let i = 0; i < this.splinePointsLength; i++) {
       console.log("this.splineHelperObjects[i]: ", this.splineHelperObjects[i]);
       positions.push(this.splineHelperObjects[i].position);
@@ -322,6 +321,20 @@ export class Viewer {
       const spline = this.splines[k];
       // this.scene.add( spline.mesh );
     }
+
+    this.loadTour([
+      new THREE.Vector3(
+        -52315.51338274434,
+        -13771.954551203266,
+        -12781.394689126155
+      ),
+      new THREE.Vector3(
+        -52315.51338274434,
+        -10771.954551203266,
+        -12781.394689126155
+      ),
+    ]);
+
     const geomytryCurve = new THREE.TubeGeometry(
       curveSplineEditor,
       100,
@@ -398,9 +411,10 @@ export class Viewer {
   }
 
   addPoint() {
+    console.log("vao add Point");
     this.splinePointsLength++;
 
-    positions.push(this.addSplineObject && this.addSplineObject().position);
+    positions.push(this.addSplineObject().position);
     this.updateSplineOutline;
     this.render;
   }
@@ -483,7 +497,6 @@ export class Viewer {
   }
 
   loadTour(new_positions) {
-    console.log("new_positions: ", new_positions, positions);
     while (new_positions.length > positions.length) {
       this.addPoint();
     }
@@ -500,7 +513,7 @@ export class Viewer {
 
   updateCamera() {
     const time = clock.getElapsedTime();
-    const looptime = 100;
+    const looptime = 30;
     const t = (time % looptime) / looptime;
     const t2 = ((time + 0.1) % looptime) / looptime;
 
