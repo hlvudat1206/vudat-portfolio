@@ -232,7 +232,7 @@ export class Viewer {
     this.splineHelperObjects = [];
 
     // this.updateLights();
-    this.splinePointsLength = 2;
+    this.splinePointsLength = 12;
 
     this.transFormControl = new TransformControls(
       this.defaultCamera,
@@ -325,14 +325,56 @@ export class Viewer {
     this.loadTour([
       new THREE.Vector3(
         -52315.51338274434,
-        -13771.954551203266,
-        -12781.394689126155
-      ),
-      new THREE.Vector3(
-        -52315.51338274434,
         -10771.954551203266,
         -12781.394689126155
       ),
+      new THREE.Vector3(
+        -23084.523253940453,
+        -9502.020726409284,
+        -12781.394689126155
+      ),
+      new THREE.Vector3(
+        -12129.732348936166,
+        -8657.684643314495,
+        -23268.849396543428
+      ),
+      new THREE.Vector3(0, -8248.817732891786, -23793.04097133375),
+      new THREE.Vector3(
+        11365.015067622457,
+        -8073.87640362433,
+        -15012.622773507208
+      ),
+      new THREE.Vector3(
+        12484.210505992995,
+        -8613.47660670388,
+        6557.482608192877
+      ),
+      new THREE.Vector3(
+        28482.677087623044,
+        -11299.851129088258,
+        16978.532491983748
+      ),
+      new THREE.Vector3(
+        17283.902811604417,
+        -10128.860167430417,
+        23168.47042469622
+      ),
+      new THREE.Vector3(
+        -4793.833858785376,
+        -13724.135093589295,
+        28575.83343791384
+      ),
+      new THREE.Vector3(
+        -22361.392853519577,
+        -13257.972925924201,
+        29855.989627873987
+      ),
+      new THREE.Vector3(
+        -34968.09091940746,
+        -12420.71142410057,
+        21336.52934571329
+      ),
+      new THREE.Vector3(-37887.70807207669, -13348.07512727279, 0),
     ]);
 
     const geomytryCurve = new THREE.TubeGeometry(
@@ -513,7 +555,7 @@ export class Viewer {
 
   updateCamera() {
     const time = clock.getElapsedTime();
-    const looptime = 30;
+    const looptime = 15;
     const t = (time % looptime) / looptime;
     const t2 = ((time + 0.1) % looptime) / looptime;
 
