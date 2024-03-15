@@ -78,6 +78,7 @@ const params = {
 
 let statusAnimationCamera = false;
 let cube;
+let adjustedHeight = 3000;
 
 const onDownPosition = new THREE.Vector2();
 const onUpPosition = new THREE.Vector2();
@@ -213,6 +214,8 @@ export class Viewer {
 
     window.addEventListener("resize", this.resize.bind(this), false);
 
+    window.addEventListener("wheel", this.updateScrollValue.bind(this));
+
     document.addEventListener(
       "pointerdown",
       this.onPointerDownSplineEditor.bind(this)
@@ -244,7 +247,7 @@ export class Viewer {
       "dragging-changed",
       this.dragChange.bind(this)
     );
-    this.scene.add(this.transFormControl);
+    // this.scene.add(this.transFormControl); //remove transformcontrol out scene
 
     this.transFormControl.addEventListener(
       "objectChange",
@@ -284,7 +287,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0x00ff00,
         opacity: 0.35,
-        visible: true,
+        visible: false,
       })
     );
 
@@ -298,7 +301,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0x0000ff,
         opacity: 0.35,
-        visible: true,
+        visible: false,
       })
     );
 
@@ -311,7 +314,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0xff0000,
         opacity: 1,
-        visible: true,
+        visible: false,
       })
     );
     curveSplineEditor.mesh.castShadow = true;
@@ -325,56 +328,56 @@ export class Viewer {
     this.loadTour([
       new THREE.Vector3(
         -52315.51338274434,
-        -10771.954551203266,
+        -12399.423280724337,
         -12781.394689126155
       ),
       new THREE.Vector3(
         -23084.523253940453,
-        -9502.020726409284,
+        -11485.088330975428,
         -12781.394689126155
       ),
       new THREE.Vector3(
-        -12129.732348936166,
-        -8657.684643314495,
-        -23268.849396543428
+        -18375.996870651674,
+        -12769.849952756844,
+        -34883.53073049786
       ),
-      new THREE.Vector3(0, -8248.817732891786, -23793.04097133375),
+      new THREE.Vector3(0, -16779.12393260158, -36979.378239947946),
       new THREE.Vector3(
-        11365.015067622457,
-        -8073.87640362433,
-        -15012.622773507208
+        24833.194995906008,
+        -14386.957593563566,
+        -18226.16447579951
       ),
       new THREE.Vector3(
-        12484.210505992995,
-        -8613.47660670388,
+        32875.8784202049,
+        -15912.145464113612,
         6557.482608192877
       ),
       new THREE.Vector3(
-        28482.677087623044,
-        -11299.851129088258,
-        16978.532491983748
+        29500.695044054693,
+        -16909.656801754696,
+        22430.134894015024
       ),
       new THREE.Vector3(
-        17283.902811604417,
-        -10128.860167430417,
-        23168.47042469622
+        18150.84997417841,
+        -18250.63427236783,
+        35890.69698150507
       ),
       new THREE.Vector3(
         -4793.833858785376,
-        -13724.135093589295,
-        28575.83343791384
+        -18322.20467179368,
+        38807.503515319855
       ),
       new THREE.Vector3(
         -22361.392853519577,
-        -13257.972925924201,
-        29855.989627873987
+        -19136.325731834557,
+        39528.91337718125
       ),
       new THREE.Vector3(
-        -34968.09091940746,
-        -12420.71142410057,
+        -44931.16562593136,
+        -17550.10700120592,
         21336.52934571329
       ),
-      new THREE.Vector3(-37887.70807207669, -13348.07512727279, 0),
+      new THREE.Vector3(-47110.253742279536, -17187.230324163498, 0),
     ]);
 
     const geomytryCurve = new THREE.TubeGeometry(
@@ -388,11 +391,11 @@ export class Viewer {
     const materialCurve = new THREE.MeshBasicMaterial({
       wireframe: true,
       color: 0xff0000,
-      visible: true,
+      visible: false,
     });
     // meshCurve = new THREE.Mesh(geomytryCurve, materialCurve);
     meshCurve = new THREE.Mesh(geomytryCurve, materialCurve);
-    // meshCurve.position.set(20, 10, 0);
+
     this.scene.add(meshCurve);
   }
   init() {}
@@ -425,7 +428,7 @@ export class Viewer {
     console.log("positionnnn");
     const material = new THREE.MeshLambertMaterial({
       color: Math.random() * 0xffffff,
-      visible: true,
+      visible: false,
     });
 
     const object = new THREE.Mesh(geometry, material);
@@ -1222,6 +1225,18 @@ export class Viewer {
         this.animCtrls.push(ctrl);
       });
     }
+  }
+
+  updateScrollValue(event) {
+    event.preventDefault(); /// prevent scrolling
+
+    let zoom = this.defaultCamera.zoom; // take current zoom value
+    zoom += event.deltaY * -0.01; /// adjust it
+    zoom = Math.min(Math.max(0.125, zoom), 4); /// clamp the value
+
+    // this.defaultCamera.zoom = zoom; /// assign new zoom value
+    // this.defaultCamera.updateProjectionMatrix(); /// make the changes take effect
+    console.log("scrollValue: ", zoom);
   }
 
   clear() {
