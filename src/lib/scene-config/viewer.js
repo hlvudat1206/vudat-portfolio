@@ -79,6 +79,7 @@ const params = {
 let statusAnimationCamera = false;
 let cube;
 let adjustedHeight = 3000;
+let zoomLevel = 1;
 
 const onDownPosition = new THREE.Vector2();
 const onUpPosition = new THREE.Vector2();
@@ -558,10 +559,11 @@ export class Viewer {
 
   updateCamera() {
     const time = clock.getElapsedTime();
+    console.log("time: ", time);
     const looptime = 15;
     const t = (time % looptime) / looptime;
     const t2 = ((time + 0.1) % looptime) / looptime;
-
+    console.log("t t2: ", t, t2, zoomLevel);
     const pos = meshCurve.geometry.parameters.path.getPointAt(t);
     const pos2 = meshCurve.geometry.parameters.path.getPointAt(t2);
     this.defaultCamera.position.copy(pos);
@@ -1228,15 +1230,39 @@ export class Viewer {
   }
 
   updateScrollValue(event) {
-    event.preventDefault(); /// prevent scrolling
+    let caledValue;
+    let delta = Math.sign(event.deltaY);
+    zoomLevel += delta; // Adjust the factor as needed
 
-    let zoom = this.defaultCamera.zoom; // take current zoom value
-    zoom += event.deltaY * -0.01; /// adjust it
-    zoom = Math.min(Math.max(0.125, zoom), 4); /// clamp the value
+    let valueScroll = zoomLevel.toFixed(0);
 
-    // this.defaultCamera.zoom = zoom; /// assign new zoom value
-    // this.defaultCamera.updateProjectionMatrix(); /// make the changes take effect
-    console.log("scrollValue: ", zoom);
+    //-50 --> +50 ---> map 0 --> 0.9
+    const total = 100;
+    //convert %
+    if (Number(valueScroll) >= 0) {
+      //Zoom Out
+      caledValue = 0;
+    } else {
+      // caledValue = Math.abs(Number(valueScroll) - 50) / total;
+      //Zoom In
+      caledValue = Math.abs(Number(valueScroll)) / total;
+    }
+    console.log("scrollValue: ", caledValue);
+
+    //Set caledValue is only run from 0 to 1
+    if (caledValue >= 0 && caledValue <= 0.9) {
+      const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
+      const pos2 = meshCurve.geometry.parameters.path.getPointAt(
+        (caledValue * 110) / 100
+      );
+      this.defaultCamera.position.copy(pos);
+      this.defaultCamera.lookAt(pos2);
+    }
+  }
+
+  updateStatusScroll(param) {
+    console.log("param: ", param);
+    statusAnimationCamera = param;
   }
 
   clear() {

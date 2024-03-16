@@ -9,11 +9,7 @@
   import { TransformControls } from "@js/TransformControls.js";
 
   let scene;
-  // let selectedModel = "src/models/thoitrang_nam_1fittingroom.gltf";
   let selectedModel = "./assets/models/cyberCity/scene.gltf";
-  // let selectedModel = "./assets/models/livingRoom/scene.gltf";
-
-  // let selectedModel = "./assets/models/motobike/motorbike.gltf";
 
   let viewer;
   let canvas;
@@ -87,6 +83,9 @@
     mainLayer.insertBefore(axesLayer, canvas);
     const guiLayer = viewer.guiDom();
     mainLayer.insertBefore(guiLayer, canvas);
+
+    const scrollDemo = document.querySelector("#main");
+    const output = document.querySelector(".output");
   };
 
   function loadModel(path) {
@@ -133,39 +132,15 @@
 
   const onOverViewButton = () => {
     isGoMallMode = !isGoMallMode;
-    // viewer.loadTour([
-    //   new THREE.Vector3(
-    //     -4364.295314571153,
-    //     -17309.225182491606,
-    //     20595.708314620035
-    //   ),
-    //   new THREE.Vector3(
-    //     14838.287554076516,
-    //     -14875.496624187701,
-    //     22700.798745904816
-    //   ),
-
-    //   new THREE.Vector3(
-    //     2610.677073859876,
-    //     -13552.224512932811,
-    //     22834.73290624967
-    //   ),
-    //   new THREE.Vector3(
-    //     -15767.585693359375,
-    //     -15081.89032653495,
-    //     30691.64747693053
-    //   ),
-    //   new THREE.Vector3(
-    //     -33177.84769987144,
-    //     -16455.4158105302,
-    //     22423.396457589824
-    //   ),
-    // ]);
+    viewer.updateStatusScroll(isGoMallMode);
   };
   const interactObject = () => {
     console.log("ckick click");
     console.log("viewer.getCoordinate(): ", viewer.getCoordinate());
   };
+
+
+
   onMount(() => {
     init();
   });
