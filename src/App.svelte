@@ -7,7 +7,7 @@
   import WebGL from "@js/WebGL.js";
   import Slider from "./content/slider.svelte";
   import { TransformControls } from "@js/TransformControls.js";
-
+  import { percentLoading } from "./lib/scene-config/store.js";
   let scene;
   let selectedModel = "./assets/models/cyberCity/scene.gltf";
 
@@ -18,6 +18,7 @@
 
   let options;
   $: console.log("isGoMallMode: ", isGoMallMode);
+  $: console.log("$percentLoading: ", $percentLoading);
   window.VIEWER = {};
 
   if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
@@ -139,8 +140,6 @@
     console.log("viewer.getCoordinate(): ", viewer.getCoordinate());
   };
 
-
-
   onMount(() => {
     init();
   });
@@ -154,6 +153,7 @@
 >
   <canvas class="full-screen" id="container" bind:this={canvas}> </canvas>
   <div id="built-projects">
+    <div class="progress-bar" style="width: {$percentLoading * 100}%;"></div>
     <div
       style="font-weight: 600;
     font-size: 20px;
@@ -383,5 +383,12 @@
     background-color: #277a7a;
     border-radius: 10px;
     border: 2px solid #065ec0;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background-color: rgba(12, 144, 36, 0.76);
+    transition: width 0.3s ease-in-out;
+    border-radius: 5pxrgba (32, 184, 60, 0.76);
   }
 </style>

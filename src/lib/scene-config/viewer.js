@@ -37,6 +37,7 @@ import { TWEEN } from "@js/tween.module.min.js";
 
 import { environments } from "@public/assets/environment/index.js";
 import { TransformControls } from "@js/transFormControls.js";
+import { percentLoading } from "./store.js";
 
 // import { createBackground } from '../lib/three-vignette.js';
 
@@ -1258,6 +1259,8 @@ export class Viewer {
       this.defaultCamera.position.copy(pos);
       this.defaultCamera.lookAt(pos2);
     }
+
+    percentLoading.update((n) => (n = caledValue));
   }
 
   updateStatusScroll(param) {
