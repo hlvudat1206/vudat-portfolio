@@ -80,6 +80,21 @@
     // Initial setup
     translateSlider(slides[currentSlide].offsetWidth);
   });
+
+  const openWindow = (item) => {
+    // e.preventDefault();
+
+    var url = item.link;
+
+    //open mini window
+    // var features = "width=600,height=400,resizable=yes";
+    // window.open(url, "_blank", features);
+
+    //open direct
+    // window.location.href = url;
+
+    window.open(url);
+  };
 </script>
 
 <div class="slider-container">
@@ -89,7 +104,12 @@
         <div style="display:flex; height:100%">
           <div class="image-custom">
             <div>
-              <img src={item.path} height="100%" width="100%" />
+              <img
+                src={item.path}
+                height="100%"
+                width="100%"
+                on:click={() => openWindow(item)}
+              />
             </div>
             <div class="image-caption">
               {item.name}
@@ -206,6 +226,6 @@
   .content {
     flex: 40%;
     font-weight: 500;
-    background-color: #efd699;
+    background-color: #ffffff;
   }
 </style>

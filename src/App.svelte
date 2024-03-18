@@ -82,8 +82,8 @@
 
     const axesLayer = viewer.axesDom();
     mainLayer.insertBefore(axesLayer, canvas);
-    const guiLayer = viewer.guiDom();
-    mainLayer.insertBefore(guiLayer, canvas);
+    // const guiLayer = viewer.guiDom();
+    // mainLayer.insertBefore(guiLayer, canvas);
 
     const scrollDemo = document.querySelector("#main");
     const output = document.querySelector(".output");

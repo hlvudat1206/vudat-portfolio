@@ -81,7 +81,7 @@ let statusAnimationCamera = false;
 let cube;
 let adjustedHeight = 3000;
 let zoomLevel = 1;
-
+let center, size;
 const onDownPosition = new THREE.Vector2();
 const onUpPosition = new THREE.Vector2();
 const pointer = new THREE.Vector2();
@@ -719,11 +719,11 @@ export class Viewer {
   setContent(object, clips) {
     this.clear();
     const box = new Box3().setFromObject(object);
-    const size = box.getSize(new Vector3()).length();
+    size = box.getSize(new Vector3()).length();
     console.log("size: ", size);
     // const size = 15;
 
-    const center = box.getCenter(new Vector3());
+    center = box.getCenter(new Vector3());
     // let box, size, center;
     console.log("center: ", center);
     this.controls.reset();
@@ -732,6 +732,8 @@ export class Viewer {
     object.position.z += object.position.z - center.z;
 
     this.controls.maxDistance = size * 10;
+    this.controls.enableDamping = true;
+
     this.defaultCamera.near = size / 100;
     this.defaultCamera.far = size * 100;
     this.defaultCamera.updateProjectionMatrix();
@@ -1231,33 +1233,41 @@ export class Viewer {
   }
 
   updateScrollValue(event) {
+    //zoom in --> delta < 0, zoom out --> delta > 0
     let caledValue;
     let delta = Math.sign(event.deltaY);
-    zoomLevel += delta; // Adjust the factor as needed
+    //catch case zoom out && not in processing => return zoom = 0
+    if (delta > 0 && zoomLevel > -0.01) {
+      delta = -1;
+    } else {
+      console.log("zoom: ", delta, zoomLevel);
+      zoomLevel += delta; // Adjust the factor as needed
+    }
 
     let valueScroll = zoomLevel.toFixed(0);
+    let convertedValueScroll =
+      Number(valueScroll) >= 0 ? -1 : Number(valueScroll);
 
     //-50 --> +50 ---> map 0 --> 0.9
     const total = 100;
-    //convert %
-    if (Number(valueScroll) >= 0) {
-      //Zoom Out
-      caledValue = 0;
-    } else {
-      // caledValue = Math.abs(Number(valueScroll) - 50) / total;
-      //Zoom In
-      caledValue = Math.abs(Number(valueScroll)) / total;
-    }
+
+    caledValue = Math.abs(convertedValueScroll) / total;
     console.log("scrollValue: ", caledValue);
 
     //Set caledValue is only run from 0 to 1
-    if (caledValue >= 0 && caledValue <= 0.9) {
+    if (caledValue > 0.01 && caledValue <= 0.99) {
       const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
       const pos2 = meshCurve.geometry.parameters.path.getPointAt(
         (caledValue * 110) / 100
       );
       this.defaultCamera.position.copy(pos);
       this.defaultCamera.lookAt(pos2);
+    } else {
+      this.defaultCamera.position.copy(center);
+      this.defaultCamera.position.x += size / 2.0;
+      this.defaultCamera.position.y += size / 5.0;
+      this.defaultCamera.position.z += size / 2.0;
+      this.defaultCamera.lookAt(center);
     }
 
     percentLoading.update((n) => (n = caledValue));
