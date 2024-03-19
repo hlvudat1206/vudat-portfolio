@@ -27,12 +27,13 @@
       link: "https://sanpham.starglobal3d.com/demo/house3d/",
     },
     {
-      id: 3,
+      id: 4,
       name: "Dat's Portfolio",
       description: "Introduce some projects experienced by Dat.",
       path: "./assets/project-thumbnail/doll-house.png",
-      link: "",
+      link: "https://hlvudat1206.github.io/vudat-portfolio/",
     },
+    
   ];
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -61,7 +62,7 @@
         currentSlide = slides.length - 1 - lastIndexCard; // Set to last slide for infinite scrolling
       }
 
-      translateSlider(slides[currentSlide].offsetWidth);
+      translateSlider(slides[currentSlide] && slides[currentSlide].offsetWidth);
     }
 
     function handleNextClick() {
@@ -70,7 +71,7 @@
         currentSlide = 0; // Set to first slide for infinite scrolling
         // projectList = projectList.reverse();
       }
-      translateSlider(slides[currentSlide].offsetWidth);
+      translateSlider(slides[currentSlide] && slides[currentSlide].offsetWidth);
     }
 
     slider.addEventListener("click", handleSlideClick);

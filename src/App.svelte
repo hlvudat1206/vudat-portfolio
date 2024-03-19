@@ -8,6 +8,9 @@
   import Slider from "./content/slider.svelte";
   import { TransformControls } from "@js/TransformControls.js";
   import { percentLoading } from "./lib/scene-config/store.js";
+  import Tabs from "./components/tab/index.svelte";
+  import Bio from "./content/bio.svelte";
+  import Skills from "./content/skills.svelte";
   let scene;
   let selectedModel = "./assets/models/cyberCity/scene.gltf";
 
@@ -15,7 +18,11 @@
   let canvas;
   let isGoMallMode = false;
   let textButtonView = "Scroll Mode";
-
+  let onMenu = true;
+  let items = [
+    { label: "Introduce", value: 1, component: Bio },
+    { label: "Skills", value: 2, component: Skills },
+  ];
   let options;
   $: console.log("isGoMallMode: ", isGoMallMode);
   $: console.log("$percentLoading: ", $percentLoading);
@@ -133,6 +140,7 @@
 
   const onOverViewButton = () => {
     isGoMallMode = !isGoMallMode;
+    onMenu = !onMenu;
     viewer.updateStatusScroll(isGoMallMode);
   };
   const interactObject = () => {
@@ -182,47 +190,12 @@
     </div>
   </div>
   <div class="broken-border" id="bio-area">
-    <div class="title-image">Introduction</div>
-    <div class="image-text">
-      I'm Vu Dat, a graduate with a degree in engineering physics and
-      mathematics from Ho Chi Minh City University of Technology. With over 2
-      years of experience in both frontend and backend web development, I've
-      contributed to various 2D and 3D web projects, including traditional
-      management software, 3D real estate, and shopping malls. My focus lies in
-      enhancing user experience by researching and optimizing 3D model
-      materials, lighting, backgrounds, and more for web displays
-    </div>
+    <aside class:onMenu>
+      <Tabs {items} />
+    </aside>
   </div>
 
-  <div class="broken-border-v2" id="skill-area">
-    <div class="title-image">My Skill and Experience</div>
-    <div class="image-text">
-      <div>
-        Design and Develop Web App From 2D Web Elements to 3D Web Integrations
-      </div>
-      <br />
-      <div>
-        <div>2D: Frontend: Svelte, Reactjs, Vanilla Javascript</div>
-        <div>Backend: Golang, Nodejs, Git, Gitlab</div>
-      </div>
-      <br />
-      <br />
-      <div>3D: Three js Tool: Blender</div>
-      <div
-        class="icon-box"
-        style="position: absolute;
-    width: 70%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;"
-      >
-        <div class="js-icon"></div>
-        <div class="svelte-icon"></div>
-        <div class="threejs-icon"></div>
-        <div class="git-icon"></div>
-      </div>
-    </div>
-  </div>
+  <div class="broken-border-v2" id="skill-area"></div>
 </main>
 
 <!-- <SimpleModal
@@ -276,16 +249,16 @@
   }
 
   .broken-border {
-    width: 500px; /* Adjust as needed */
-    height: 200px; /* Adjust as needed */
-    background-image: url("./public/assets/frame/frame.png");
+    /* width: 500px; 
+    height: 200px; 
     background-size: cover;
     background-position: center;
     position: absolute;
     left: 10%;
     top: 20%;
     min-width: 400px;
-    min-height: 400px;
+    min-height: 400px; */
+    /* background-image: url("./public/assets/frame/frame.png"); */
   }
   .middle-main {
   }
@@ -305,23 +278,11 @@
   button:hover {
     background-color: rgb(231, 170, 116);
   }
-  .image-text {
-    font-weight: 600;
-    color: #1b4242;
-    text-align: left;
-    margin: 14%;
-    font-size: 14px;
-    margin-top: 4%;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #e7e792;
-  }
 
   .broken-border-v2 {
     width: 300px; /* Adjust as needed */
     height: 200px; /* Adjust as needed */
-    background-image: url("./public/assets/frame/square-frame.png");
+    /* background-image: url("./public/assets/frame/square-frame.png"); */
     background-size: cover;
     background-position: center;
     position: absolute;
@@ -330,65 +291,32 @@
     min-width: 400px;
     min-height: 400px;
   }
-  .js-icon {
-    background-image: url("./public/assets/icon/js.svg");
-    width: 30px;
-    height: 30px;
-  }
-  .js-icon:hover {
-    background-color: aliceblue;
-    opacity: 50%;
-    border-radius: 6px;
-  }
-  .svelte-icon {
-    background-image: url("./public/assets/icon/svelte.svg");
-    width: 80px;
-    height: 30px;
-  }
-  .svelte-icon:hover {
-    background-color: aliceblue;
-    opacity: 50%;
-    border-radius: 6px;
-  }
-
-  .threejs-icon {
-    background-image: url("./public/assets/icon/threejs.svg");
-    width: 30px;
-    height: 30px;
-  }
-  .threejs-icon:hover {
-    background-color: aliceblue;
-    opacity: 50%;
-    border-radius: 6px;
-  }
-  .git-icon {
-    background-image: url("./public/assets/icon/git.svg");
-    width: 80px;
-    height: 30px;
-  }
-  .git-icon:hover {
-    background-color: rgb(255, 255, 255);
-    opacity: 50%;
-    border-radius: 6px;
-  }
-  .icon-box {
-    border-radius: 4px;
-    border: 0.25px solid #e9d4d4;
-  }
-
-  .title-image {
-    margin: 0 5% 0 5%;
-    font-size: 18px;
-    color: #f4a536;
-    background-color: #277a7a;
-    border-radius: 10px;
-    border: 2px solid #065ec0;
-  }
 
   .progress-bar {
     height: 8px;
     background-color: rgba(12, 144, 36, 0.76);
     transition: width 0.3s ease-in-out;
     border-radius: 5pxrgba (32, 184, 60, 0.76);
+  }
+
+  aside {
+    position: absolute;
+    left: -500px;
+    transition: all 0.5s;
+
+    height: 50%;
+    width: 20%;
+    top: 10%;
+    bottom: 20%;
+    border: 1px solid #ddd;
+    background-color: #ffe7e7;
+    border-radius: 12px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+
+  .onMenu {
+    left: 0px;
+    cursor: pointer;
   }
 </style>
