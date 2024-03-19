@@ -25,7 +25,7 @@
   .box {
     margin-bottom: 10px;
     /* padding: 40px; */
-    border: 1px solid #dee2e6;
+    border: 2px solid #dee2e6;
     border-radius: 0 0 0.5rem 0.5rem;
     border-top: 0;
   }
@@ -36,7 +36,7 @@
     padding-left: 0;
     margin-bottom: 0;
     list-style: none;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 2px solid #dee2e6;
   }
   li {
     margin-bottom: -1px;

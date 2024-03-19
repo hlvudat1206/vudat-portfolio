@@ -24,5 +24,6 @@
     border-radius: 10px;
     background-color: #e7e792;
     height: 80%; */
+    position: absolute;
   }
 </style>

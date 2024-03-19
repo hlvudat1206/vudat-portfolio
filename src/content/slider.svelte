@@ -33,7 +33,6 @@
       path: "./assets/project-thumbnail/doll-house.png",
       link: "https://hlvudat1206.github.io/vudat-portfolio/",
     },
-    
   ];
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -151,7 +150,8 @@
   }
 
   .slide {
-    flex: 0 0 calc(33.33% - 5px);
+    border: 2px solid;
+    flex: 0 0 calc(33.33% - 8px);
     margin: 5px 2px 5px 2px; /* Optional spacing between cards */
     border-radius: 5px; /* Add rounded corners */
     background-color: #fff; /* Set background color */
@@ -227,6 +227,6 @@
   .content {
     flex: 40%;
     font-weight: 500;
-    background-color: #ffffff;
+    background-color: wheat;
   }
 </style>

@@ -189,13 +189,12 @@
       >
     </div>
   </div>
-  <div class="broken-border" id="bio-area">
-    <aside class:onMenu>
-      <Tabs {items} />
-    </aside>
-  </div>
-
-  <div class="broken-border-v2" id="skill-area"></div>
+  <!-- <div class="broken-border" id="bio-area">
+   
+  </div> -->
+  <aside class:onMenu>
+    <Tabs {items} />
+  </aside>
 </main>
 
 <!-- <SimpleModal
@@ -308,8 +307,9 @@
     width: 20%;
     top: 10%;
     bottom: 20%;
-    border: 1px solid #ddd;
-    background-color: #ffe7e7;
+    border: 2px solid #ddd;
+    background-color: #4e3c12;
+    color: #ddd;
     border-radius: 12px;
     margin-top: 20px;
     cursor: pointer;

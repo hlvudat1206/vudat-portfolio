@@ -13,14 +13,7 @@
   <br />
   <br />
   <div>3D: Three js Tool: Blender</div>
-  <div
-    class="icon-box"
-    style="position: absolute;
-    width: 70%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;"
-  >
+  <div class="icon-box">
     <div class="js-icon"></div>
     <div class="svelte-icon"></div>
     <div class="threejs-icon"></div>
@@ -41,6 +34,7 @@
     border-radius: 10px;
     background-color: #e7e792;
     height: 80%; */
+    position: absolute;
   }
 
   .js-icon {
@@ -87,5 +81,10 @@
   .icon-box {
     border-radius: 4px;
     border: 0.25px solid #e9d4d4;
+
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: wheat;
   }
 </style>
