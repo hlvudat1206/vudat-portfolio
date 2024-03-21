@@ -151,6 +151,7 @@
   const onOverViewButton = () => {
     isGoMallMode = !isGoMallMode;
     onMenu = !onMenu;
+    onContactBar = !onContactBar;
     viewer.updateStatusScroll(isGoMallMode);
   };
   const interactObject = () => {
@@ -174,19 +175,28 @@
     class="contact-bar {onContactBar ? '' : 'contact-style'}"
     id="contact-bar"
   >
-    <div class="mail-icon">
+    <div class="mail-icon contact-bar__hover">
       <span title="dathuynh001@gmail.com" use:tooltip
         ><a href="/" target="_blank"></a>
       </span>
     </div>
-    <div class="phone-icon">
+    <div class="phone-icon contact-bar__hover">
       <span title="0908936451" use:tooltip
         ><a href="/" target="_blank"></a></span
       >
     </div>
-    <div class="instagram-icon">
-      <span title="https://www.instagram.com/vudat.huynh1206/" use:tooltip
+    <div class="instagram-icon contact-bar__hover">
+      <span title="@vudat.huynh1206/" use:tooltip
         ><a href="https://www.instagram.com/vudat.huynh1206/" target="_blank"
+        ></a></span
+      >
+    </div>
+
+    <div class="discord-icon contact-bar__hover">
+      <span title="@740394106978697337" use:tooltip
+        ><a
+          href="https://discordapp.com/users/740394106978697337"
+          target="_blank"
         ></a></span
       >
     </div>
@@ -336,7 +346,7 @@
     transition: all 1s;
 
     height: 50%;
-    width: 20%;
+    width: 25%;
     top: 10%;
     bottom: 20%;
     border: 2px solid #ddd;
@@ -427,5 +437,18 @@
     background-image: url("./public/assets/icon/instagram.svg");
     width: 80px;
     height: 30px;
+  }
+
+  .discord-icon {
+    background-image: url("./public/assets/icon/discord.svg");
+    width: 80px;
+    height: 30px;
+  }
+
+  .contact-bar__hover:hover {
+    cursor: pointer;
+    background-color: rgb(194, 200, 141);
+    border-radius: 5px;
+    height: 100%;
   }
 </style>

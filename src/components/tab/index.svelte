@@ -49,6 +49,7 @@
     display: block;
     padding: 0.5rem 1rem;
     cursor: pointer;
+    min-width: 80px;
   }
 
   span:hover {
