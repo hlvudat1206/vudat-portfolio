@@ -14,10 +14,23 @@
   <br />
   <div>3D: Three js Tool: Blender</div>
   <div class="icon-box">
-    <div class="js-icon"></div>
-    <div class="svelte-icon"></div>
-    <div class="threejs-icon"></div>
-    <div class="git-icon"></div>
+    <div class="js-icon">
+      <span
+        ><a
+          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+          target="_blank"
+        ></a></span
+      >
+    </div>
+    <div class="svelte-icon">
+      <span><a href="https://svelte.dev/" target="_blank"></a></span>
+    </div>
+    <div class="threejs-icon">
+      <span><a href="https://threejs.org/" target="_blank"></a></span>
+    </div>
+    <div class="git-icon">
+      <span><a href="https://about.gitlab.com/" target="_blank"></a></span>
+    </div>
   </div>
 </div>
 
@@ -35,6 +48,7 @@
     background-color: #e7e792;
     height: 80%; */
     position: absolute;
+    text-align: left;
   }
 
   .js-icon {
@@ -81,10 +95,11 @@
   .icon-box {
     border-radius: 4px;
     border: 0.25px solid #e9d4d4;
-
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     background-color: wheat;
+    justify-content: space-around;
+    margin-top: 20px;
   }
 </style>

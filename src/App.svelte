@@ -7,10 +7,15 @@
   import WebGL from "@js/WebGL.js";
   import Slider from "./content/slider.svelte";
   import { TransformControls } from "@js/TransformControls.js";
-  import { percentLoading } from "./lib/scene-config/store.js";
+  import {
+    percentLoading,
+    menuStatus,
+    contactStatus,
+  } from "./lib/scene-config/store.js";
   import Tabs from "./components/tab/index.svelte";
   import Bio from "./content/bio.svelte";
   import Skills from "./content/skills.svelte";
+  import { tooltip } from "./components/tooltip/tooltip";
   let scene;
   let selectedModel = "./assets/models/cyberCity/scene.gltf";
 
@@ -19,6 +24,7 @@
   let isGoMallMode = false;
   let textButtonView = "Scroll Mode";
   let onMenu = true;
+  let onContactBar = true;
   let items = [
     { label: "Introduce", value: 1, component: Bio },
     { label: "Skills", value: 2, component: Skills },
@@ -27,6 +33,10 @@
   $: console.log("isGoMallMode: ", isGoMallMode);
   $: console.log("$percentLoading: ", $percentLoading);
   window.VIEWER = {};
+
+  $: onMenu = $menuStatus;
+  $: console.log("contactStatus: ", $contactStatus),
+    (onContactBar = $contactStatus);
 
   if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
     console.error("The File APIs are not fully supported in this browser.");
@@ -73,18 +83,18 @@
     // Create a new child element
     const canvasThree = viewer.rendererDom();
     const projectArea = document.getElementById("built-projects");
-    const bioArea = document.getElementById("bio-area");
-    const skillArea = document.getElementById("skill-area");
+
     const middleArea = document.getElementById("middle-area");
+    const contactBar = document.getElementById("contact-bar");
     // Get the first child of the parent
     const canvas = mainLayer.firstChild;
     // Insert the new child before the first child
     mainLayer.insertBefore(canvasThree, canvas);
+    mainLayer.insertBefore(contactBar, canvasThree);
     mainLayer.insertBefore(middleArea, canvasThree);
 
     mainLayer.insertBefore(projectArea, canvasThree);
-    mainLayer.insertBefore(bioArea, projectArea);
-    mainLayer.insertBefore(skillArea, projectArea);
+
     mainLayer.insertBefore(middleArea, canvasThree);
 
     const axesLayer = viewer.axesDom();
@@ -160,6 +170,28 @@
   on:click={interactObject}
 >
   <canvas class="full-screen" id="container" bind:this={canvas}> </canvas>
+  <div
+    class="contact-bar {onContactBar ? '' : 'contact-style'}"
+    id="contact-bar"
+  >
+    <div class="mail-icon">
+      <span title="dathuynh001@gmail.com" use:tooltip
+        ><a href="/" target="_blank"></a>
+      </span>
+    </div>
+    <div class="phone-icon">
+      <span title="0908936451" use:tooltip
+        ><a href="/" target="_blank"></a></span
+      >
+    </div>
+    <div class="instagram-icon">
+      <span title="https://www.instagram.com/vudat.huynh1206/" use:tooltip
+        ><a href="https://www.instagram.com/vudat.huynh1206/" target="_blank"
+        ></a></span
+      >
+    </div>
+  </div>
+
   <div id="built-projects">
     <div class="progress-bar" style="width: {$percentLoading * 100}%;"></div>
     <div
@@ -182,7 +214,7 @@
       <button
         style="--focus-color: {isGoMallMode
           ? '#1d6291'
-          : '#9c460e'}; --focus-border: {isGoMallMode
+          : '#b3b10f'}; --focus-border: {isGoMallMode
           ? '2px solid blue'
           : 'none'}"
         on:click={onOverViewButton}>{textButtonView}</button
@@ -275,7 +307,7 @@
   }
 
   button:hover {
-    background-color: rgb(231, 170, 116);
+    background-color: #ddda5a;
   }
 
   .broken-border-v2 {
@@ -301,14 +333,14 @@
   aside {
     position: absolute;
     left: -500px;
-    transition: all 0.5s;
+    transition: all 1s;
 
     height: 50%;
     width: 20%;
     top: 10%;
     bottom: 20%;
     border: 2px solid #ddd;
-    background-color: #4e3c12;
+    background-color: #56514f;
     color: #ddd;
     border-radius: 12px;
     margin-top: 20px;
@@ -318,5 +350,82 @@
   .onMenu {
     left: 0px;
     cursor: pointer;
+  }
+
+  /* .contact-bar {
+    background-color: aqua;
+    height: 100px;
+    width: 300px;
+    right: 20px;
+    top: 0px;
+    position: absolute;
+  } */
+
+  .contact-bar {
+    width: 20%;
+    height: 72px;
+    position: relative;
+    transition: all 1s;
+    background-size: 100%;
+    background-attachment: fixed;
+    border: 0px solid rgba(255, 255, 255, 0.1);
+    top: 10px;
+    right: 10px;
+    color: #363636;
+    text-align: center;
+    font: sans-serif;
+    font-weight: 600;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    justify-content: center;
+    height: 5%;
+    right: 15%;
+    border-radius: 10px;
+    background-color: #e7e1d0;
+    box-shadow: 0 0 4px black;
+    -webkit-transition: all 0.25s cubic-bezier(0.52, 0.76, 0.52, 0.76);
+    -moz-transition: all 0.25s cubic-bezier(0.52, 0.76, 0.52, 0.76);
+    -o-transition: all 0.25s cubic-bezier(0.52, 0.76, 0.52, 0.76);
+    -ms-transition: all 0.25s cubic-bezier(0.52, 0.76, 0.52, 0.76);
+    transition: all 0.25s cubic-bezier(0.52, 0.76, 0.52, 0.76);
+  }
+  .contact-bar:before {
+    display: block;
+    position: absolute;
+
+    -webkit-filter: blur(20px);
+    -moz-filter: blur(15px);
+    -o-filter: blur(15px);
+    -ms-filter: blur(15px);
+    filter: url(#blurLayer);
+    filter: blur(15px);
+    opacity: 0.9;
+    content: " ";
+    background: lightblue url("@public/assets/bluesky.jpg") no-repeat fixed
+      center;
+    background-size: cover;
+  }
+
+  .contact-style {
+    top: -100px;
+  }
+
+  .mail-icon {
+    background-image: url("./public/assets/icon/email.svg");
+    width: 80px;
+    height: 30px;
+  }
+  .phone-icon {
+    background-image: url("./public/assets/icon/phone.svg");
+    width: 80px;
+    height: 30px;
+  }
+
+  .instagram-icon {
+    background-image: url("./public/assets/icon/instagram.svg");
+    width: 80px;
+    height: 30px;
   }
 </style>

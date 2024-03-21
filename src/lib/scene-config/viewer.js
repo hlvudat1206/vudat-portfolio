@@ -37,7 +37,7 @@ import { TWEEN } from "@js/tween.module.min.js";
 
 import { environments } from "@public/assets/environment/index.js";
 import { TransformControls } from "@js/transFormControls.js";
-import { percentLoading } from "./store.js";
+import { percentLoading, menuStatus, contactStatus } from "./store.js";
 
 // import { createBackground } from '../lib/three-vignette.js';
 
@@ -1239,8 +1239,13 @@ export class Viewer {
     //catch case zoom out && not in processing => return zoom = 0
     if (delta > 0 && zoomLevel > -0.01) {
       delta = -1;
+      menuStatus.update((n) => (n = true));
+      contactStatus.update((n) => (n = true));
     } else {
       console.log("zoom: ", delta, zoomLevel);
+      menuStatus.update((n) => (n = false));
+      contactStatus.update((n) => (n = false));
+
       zoomLevel += delta; // Adjust the factor as needed
     }
 
@@ -1253,9 +1258,8 @@ export class Viewer {
 
     caledValue = Math.abs(convertedValueScroll) / total;
     console.log("scrollValue: ", caledValue);
-
     //Set caledValue is only run from 0 to 1
-    if (caledValue > 0.01 && caledValue <= 0.99) {
+    if (caledValue > 0 && caledValue <= 0.99) {
       const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
       const pos2 = meshCurve.geometry.parameters.path.getPointAt(
         (caledValue * 110) / 100
