@@ -25,5 +25,6 @@
 
   .image-text > .para-style {
     margin-top: 10px;
+    margin-left: 10px;
   }
 </style>

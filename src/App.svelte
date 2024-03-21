@@ -354,12 +354,10 @@
     color: #ddd;
     border-radius: 12px;
     margin-top: 20px;
-    cursor: pointer;
   }
 
   .onMenu {
     left: 0px;
-    cursor: pointer;
   }
 
   /* .contact-bar {
