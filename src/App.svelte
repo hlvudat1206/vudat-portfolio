@@ -375,7 +375,7 @@
     width: 20%;
     height: 72px;
     position: relative;
-    transition: all 1s;
+    transition: all 2s;
     background-size: 100%;
     background-attachment: fixed;
     border: 0px solid rgba(255, 255, 255, 0.1);

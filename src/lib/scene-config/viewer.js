@@ -1241,6 +1241,7 @@ export class Viewer {
       delta = -1;
       menuStatus.update((n) => (n = true));
       contactStatus.update((n) => (n = true));
+      console.log("zoom out: ", zoomLevel);
     } else {
       console.log("zoom: ", delta, zoomLevel);
       menuStatus.update((n) => (n = false));
@@ -1258,20 +1259,28 @@ export class Viewer {
 
     caledValue = Math.abs(convertedValueScroll) / total;
     console.log("scrollValue: ", caledValue);
+    console.log("zoom level: ", zoomLevel);
+    console.log("delta: ", delta);
     //Set caledValue is only run from 0 to 1
-    if (caledValue > 0 && caledValue <= 0.99) {
+    if (caledValue > 0 && caledValue <= 0.99 && zoomLevel < -0.01) {
       const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
       const pos2 = meshCurve.geometry.parameters.path.getPointAt(
         (caledValue * 110) / 100
       );
       this.defaultCamera.position.copy(pos);
       this.defaultCamera.lookAt(pos2);
+      console.log("caledValue2: ", caledValue);
     } else {
       this.defaultCamera.position.copy(center);
       this.defaultCamera.position.x += size / 2.0;
       this.defaultCamera.position.y += size / 5.0;
       this.defaultCamera.position.z += size / 2.0;
       this.defaultCamera.lookAt(center);
+      caledValue = 0;
+      delta = -1;
+      zoomLevel = -0.01;
+      menuStatus.update((n) => (n = true));
+      contactStatus.update((n) => (n = true));
     }
 
     percentLoading.update((n) => (n = caledValue));
