@@ -1264,9 +1264,9 @@ export class Viewer {
     //Set caledValue is only run from 0 to 1
     if (caledValue > 0 && caledValue <= 0.99 && zoomLevel < -0.01) {
       const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
-      const pos2 = meshCurve.geometry.parameters.path.getPointAt(
-        (caledValue * 110) / 100
-      );
+      // const pos2 = meshCurve.geometry.parameters.path.getPointAt(
+      //   (caledValue * 110) / 100
+      // );
 
       //update Tween pos1
       let coords = {
@@ -1282,14 +1282,13 @@ export class Viewer {
           z: pos.z,
         })
         .onUpdate(() => {
-          return this.defaultCamera.position.set(coords.x, coords.y, coords.z);
+          this.controls.enabled = false;
+          this.defaultCamera.lookAt(coords.x, coords.y, coords.z);
+          return this.defaultCamera.position.copy(coords);
         })
         .start();
 
-      // this.defaultCamera.position.copy(pos);
-
       // this.defaultCamera.lookAt(pos2);
-      console.log("caledValue2: ", caledValue);
     } else {
       console.log("lui lui ");
       this.defaultCamera.position.copy(center);
@@ -1297,6 +1296,7 @@ export class Viewer {
       this.defaultCamera.position.y += size / 5.0;
       this.defaultCamera.position.z += size / 2.0;
       this.defaultCamera.lookAt(center);
+      this.controls.enabled = true;
       caledValue = 0;
       delta = -1;
       zoomLevel = -0.01;
