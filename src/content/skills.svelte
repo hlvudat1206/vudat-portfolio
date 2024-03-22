@@ -12,7 +12,7 @@
   </div>
   <br />
   <br />
-  <div>3D: Three js Tool: Blender</div>
+  <div>3D: Three js, Tool: Blender</div>
   <div class="icon-box">
     <div class="js-icon">
       <span

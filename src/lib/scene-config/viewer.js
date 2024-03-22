@@ -1267,10 +1267,31 @@ export class Viewer {
       const pos2 = meshCurve.geometry.parameters.path.getPointAt(
         (caledValue * 110) / 100
       );
-      this.defaultCamera.position.copy(pos);
-      this.defaultCamera.lookAt(pos2);
+
+      //update Tween pos1
+      let coords = {
+        x: this.defaultCamera.position.x,
+        y: this.defaultCamera.position.y,
+        z: this.defaultCamera.position.z,
+      };
+
+      new TWEEN.Tween(coords)
+        .to({
+          x: pos.x,
+          y: pos.y,
+          z: pos.z,
+        })
+        .onUpdate(() => {
+          return this.defaultCamera.position.set(coords.x, coords.y, coords.z);
+        })
+        .start();
+
+      // this.defaultCamera.position.copy(pos);
+
+      // this.defaultCamera.lookAt(pos2);
       console.log("caledValue2: ", caledValue);
     } else {
+      console.log("lui lui ");
       this.defaultCamera.position.copy(center);
       this.defaultCamera.position.x += size / 2.0;
       this.defaultCamera.position.y += size / 5.0;
