@@ -30,7 +30,7 @@
       id: 4,
       name: "Dat's Portfolio",
       description: "Introduce some projects experienced by Dat.",
-      path: "./assets/project-thumbnail/doll-house.png",
+      path: "./assets/project-thumbnail/portfolio.png",
       link: "https://hlvudat1206.github.io/vudat-portfolio/",
     },
   ];
@@ -52,7 +52,7 @@
       const clickedSlide = event.target.closest(".slide");
       if (!clickedSlide) return; // Ignore clicks outside of slides
       currentSlide = parseInt(clickedSlide.dataset.index, 10);
-      translateSlider(slides[currentSlide].offsetWidth);
+      translateSlider(slides[currentSlide] && slides[currentSlide].offsetWidth);
     }
 
     function handlePrevClick() {
@@ -65,6 +65,7 @@
     }
 
     function handleNextClick() {
+      console.log("click right");
       currentSlide += 1;
       if (currentSlide + lastIndexCard >= slides.length) {
         currentSlide = 0; // Set to first slide for infinite scrolling

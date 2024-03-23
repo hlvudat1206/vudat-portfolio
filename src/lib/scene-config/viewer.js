@@ -289,7 +289,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0x00ff00,
         opacity: 0.35,
-        visible: false,
+        visible: true,
       })
     );
 
@@ -303,7 +303,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0x0000ff,
         opacity: 0.35,
-        visible: false,
+        visible: true,
       })
     );
 
@@ -316,7 +316,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0xff0000,
         opacity: 1,
-        visible: false,
+        visible: true,
       })
     );
     curveSplineEditor.mesh.castShadow = true;
@@ -393,7 +393,7 @@ export class Viewer {
     const materialCurve = new THREE.MeshBasicMaterial({
       wireframe: true,
       color: 0xff0000,
-      visible: false,
+      visible: true,
     });
     // meshCurve = new THREE.Mesh(geomytryCurve, materialCurve);
     meshCurve = new THREE.Mesh(geomytryCurve, materialCurve);
@@ -430,7 +430,7 @@ export class Viewer {
     console.log("positionnnn");
     const material = new THREE.MeshLambertMaterial({
       color: Math.random() * 0xffffff,
-      visible: false,
+      visible: true,
     });
 
     const object = new THREE.Mesh(geometry, material);
@@ -1233,78 +1233,73 @@ export class Viewer {
   }
 
   updateScrollValue(event) {
-    //zoom in --> delta < 0, zoom out --> delta > 0
-    let caledValue;
-    let delta = Math.sign(event.deltaY);
-    //catch case zoom out && not in processing => return zoom = 0
-    if (delta > 0 && zoomLevel > -0.01) {
-      delta = -1;
-      menuStatus.update((n) => (n = true));
-      contactStatus.update((n) => (n = true));
-      console.log("zoom out: ", zoomLevel);
-    } else {
-      console.log("zoom: ", delta, zoomLevel);
-      menuStatus.update((n) => (n = false));
-      contactStatus.update((n) => (n = false));
-
-      zoomLevel += delta; // Adjust the factor as needed
-    }
-
-    let valueScroll = zoomLevel.toFixed(0);
-    let convertedValueScroll =
-      Number(valueScroll) >= 0 ? -1 : Number(valueScroll);
-
-    //-50 --> +50 ---> map 0 --> 0.9
-    const total = 100;
-
-    caledValue = Math.abs(convertedValueScroll) / total;
-    console.log("scrollValue: ", caledValue);
-    console.log("zoom level: ", zoomLevel);
-    console.log("delta: ", delta);
-    //Set caledValue is only run from 0 to 1
-    if (caledValue > 0 && caledValue <= 0.99 && zoomLevel < -0.01) {
-      const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
-      // const pos2 = meshCurve.geometry.parameters.path.getPointAt(
-      //   (caledValue * 110) / 100
-      // );
-
-      //update Tween pos1
-      let coords = {
-        x: this.defaultCamera.position.x,
-        y: this.defaultCamera.position.y,
-        z: this.defaultCamera.position.z,
-      };
-
-      new TWEEN.Tween(coords)
-        .to({
-          x: pos.x,
-          y: pos.y,
-          z: pos.z,
-        })
-        .onUpdate(() => {
-          this.controls.enabled = false;
-          this.defaultCamera.lookAt(coords.x, coords.y, coords.z);
-          return this.defaultCamera.position.copy(coords);
-        })
-        .start();
-
-      // this.defaultCamera.lookAt(pos2);
-    } else {
-      console.log("lui lui ");
-      this.defaultCamera.position.copy(center);
-      this.defaultCamera.position.x += size / 2.0;
-      this.defaultCamera.position.y += size / 5.0;
-      this.defaultCamera.position.z += size / 2.0;
-      this.defaultCamera.lookAt(center);
-      this.controls.enabled = true;
-      caledValue = 0;
-      delta = -1;
-      zoomLevel = -0.01;
-      menuStatus.update((n) => (n = true));
-      contactStatus.update((n) => (n = true));
-    }
-
-    percentLoading.update((n) => (n = caledValue));
+    // //zoom in --> delta < 0, zoom out --> delta > 0
+    // let caledValue;
+    // let delta = Math.sign(event.deltaY);
+    // //catch case zoom out && not in processing => return zoom = 0
+    // if (delta > 0 && zoomLevel > -0.01) {
+    //   delta = -1;
+    //   menuStatus.update((n) => (n = true));
+    //   contactStatus.update((n) => (n = true));
+    //   console.log("zoom out: ", zoomLevel);
+    // } else {
+    //   console.log("zoom: ", delta, zoomLevel);
+    //   menuStatus.update((n) => (n = false));
+    //   contactStatus.update((n) => (n = false));
+    //   zoomLevel += delta; // Adjust the factor as needed
+    // }
+    // let valueScroll = zoomLevel.toFixed(0);
+    // let convertedValueScroll =
+    //   Number(valueScroll) >= 0 ? -1 : Number(valueScroll);
+    // //-50 --> +50 ---> map 0 --> 0.9
+    // const total = 100;
+    // caledValue = Math.abs(convertedValueScroll) / total;
+    // console.log("scrollValue: ", caledValue);
+    // console.log("zoom level: ", zoomLevel);
+    // console.log("delta: ", delta);
+    // //Set caledValue is only run from 0 to 1
+    // if (caledValue >= 0 && caledValue <= 0.99 && zoomLevel < -0.01) {
+    //   console.log("tween caledValue");
+    //   const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
+    //   // const pos2 = meshCurve.geometry.parameters.path.getPointAt(
+    //   //   (caledValue * 110) / 100
+    //   // );
+    //   //update Tween pos1
+    //   let coords = {
+    //     x: this.defaultCamera.position.x,
+    //     y: this.defaultCamera.position.y,
+    //     z: this.defaultCamera.position.z,
+    //   };
+    //   new TWEEN.Tween(coords)
+    //     .to({
+    //       x: pos.x,
+    //       y: pos.y,
+    //       z: pos.z,
+    //     })
+    //     .onUpdate(() => {
+    //       this.controls.enabled = false;
+    //       this.defaultCamera.lookAt(coords.x, coords.y, coords.z);
+    //       return this.defaultCamera.position.copy(coords);
+    //     })
+    //     .start();
+    //   // this.defaultCamera.lookAt(pos2);
+    // } else {
+    //   console.log("lui lui ");
+    //   console.log("center ne: ", center);
+    //   this.defaultCamera.position.copy(center);
+    //   this.defaultCamera.position.x += size / 2.0;
+    //   this.defaultCamera.position.y += size / 5.0;
+    //   this.defaultCamera.position.z += size / 2.0;
+    //   this.defaultCamera.lookAt(center);
+    //   this.controls.enabled = true;
+    //   caledValue = 0;
+    //   delta = -1;
+    //   zoomLevel = -0.01;
+    //   menuStatus.update((n) => (n = true));
+    //   contactStatus.update((n) => (n = true));
+    //   //
+    // }
+    // percentLoading.update((n) => (n = caledValue));
   }
 
   updateStatusScroll(param) {

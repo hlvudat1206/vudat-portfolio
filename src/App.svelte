@@ -99,8 +99,8 @@
 
     const axesLayer = viewer.axesDom();
     mainLayer.insertBefore(axesLayer, canvas);
-    // const guiLayer = viewer.guiDom();
-    // mainLayer.insertBefore(guiLayer, canvas);
+    const guiLayer = viewer.guiDom();
+    mainLayer.insertBefore(guiLayer, canvas);
 
     const scrollDemo = document.querySelector("#main");
     const output = document.querySelector(".output");
@@ -231,9 +231,7 @@
       >
     </div>
   </div>
-  <!-- <div class="broken-border" id="bio-area">
-   
-  </div> -->
+
   <aside class:onMenu>
     <Tabs {items} />
   </aside>
@@ -268,8 +266,6 @@
 </SimpleModal> -->
 
 <style>
-  #container {
-  }
   #main {
     width: 100%;
     height: 100%;
@@ -287,21 +283,6 @@
     transform: translate(-50%, -50%);
     z-index: 1000;
     padding-bottom: 50px;
-  }
-
-  .broken-border {
-    /* width: 500px; 
-    height: 200px; 
-    background-size: cover;
-    background-position: center;
-    position: absolute;
-    left: 10%;
-    top: 20%;
-    min-width: 400px;
-    min-height: 400px; */
-    /* background-image: url("./public/assets/frame/frame.png"); */
-  }
-  .middle-main {
   }
 
   button {
@@ -344,7 +325,7 @@
     position: absolute;
     left: -500px;
     transition: all 1s;
-
+    margin-left: 15px;
     height: 50%;
     width: 25%;
     top: 10%;
@@ -370,7 +351,6 @@
   } */
 
   .contact-bar {
-    width: 20%;
     height: 72px;
     position: relative;
     transition: all 2s;
