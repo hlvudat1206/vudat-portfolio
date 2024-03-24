@@ -410,24 +410,24 @@
   }
 
   .mail-icon {
-    background-image: url("./public/assets/icon/email.svg");
+    background-image: url("@public/assets/icon/email.svg");
     width: 80px;
     height: 30px;
   }
   .phone-icon {
-    background-image: url("./public/assets/icon/phone.svg");
+    background-image: url("@public/assets/icon/phone.svg");
     width: 80px;
     height: 30px;
   }
 
   .instagram-icon {
-    background-image: url("./public/assets/icon/instagram.svg");
+    background-image: url("@public/assets/icon/instagram.svg");
     width: 80px;
     height: 30px;
   }
 
   .discord-icon {
-    background-image: url("./public/assets/icon/discord.svg");
+    background-image: url("@public/assets/icon/discord.svg");
     width: 80px;
     height: 30px;
   }
