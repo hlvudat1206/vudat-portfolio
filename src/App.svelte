@@ -18,6 +18,7 @@
   import { tooltip } from "./components/tooltip/tooltip";
   let scene;
   let selectedModel = "./assets/models/cyberCity/scene.gltf";
+  let infoUrlPng = "./assets/icon/info-icon.png";
 
   let viewer;
   let canvas;
@@ -30,6 +31,8 @@
     { label: "Skills", value: 2, component: Skills },
   ];
   let options;
+  let iconField;
+
   $: console.log("isGoMallMode: ", isGoMallMode);
   $: console.log("$percentLoading: ", $percentLoading);
   window.VIEWER = {};
@@ -78,6 +81,7 @@
     // visiablePlane.position.set(0, -3.5, 0);
 
     // viewer.createObject(visiablePlane);
+
     /////
     const mainLayer = document.getElementById("main");
     // Create a new child element
@@ -91,6 +95,7 @@
     // Insert the new child before the first child
     mainLayer.insertBefore(canvasThree, canvas);
     mainLayer.insertBefore(contactBar, canvasThree);
+
     mainLayer.insertBefore(middleArea, canvasThree);
 
     mainLayer.insertBefore(projectArea, canvasThree);
@@ -99,8 +104,8 @@
 
     const axesLayer = viewer.axesDom();
     mainLayer.insertBefore(axesLayer, canvas);
-    const guiLayer = viewer.guiDom();
-    mainLayer.insertBefore(guiLayer, canvas);
+    // const guiLayer = viewer.guiDom();
+    // mainLayer.insertBefore(guiLayer, canvas);
 
     const scrollDemo = document.querySelector("#main");
     const output = document.querySelector(".output");
@@ -110,6 +115,10 @@
     console.log("vao load 1");
     view(path);
     // sendData()
+  }
+
+  function loadIcontoObject(icon, pos) {
+    return viewer.icon(icon, pos);
   }
 
   /**

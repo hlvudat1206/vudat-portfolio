@@ -34,6 +34,7 @@ import * as THREE from "@build/three.module";
 // import { GUI } from "../js/lil-gui.module.min.js";
 import { GUI } from "@build/dat.gui.module.js";
 import { TWEEN } from "@js/tween.module.min.js";
+import { CSS2DRenderer, CSS2DObject } from "@js/CSS2DRenderer.js";
 
 import { environments } from "@public/assets/environment/index.js";
 import { TransformControls } from "@js/transFormControls.js";
@@ -42,7 +43,9 @@ import { percentLoading, menuStatus, contactStatus } from "./store.js";
 // import { createBackground } from '../lib/three-vignette.js';
 
 let strDownloadMime = "image/octet-stream";
-
+let img2DObject;
+let imgElement;
+let iconTotal = [];
 const DEFAULT_CAMERA = "[default]";
 
 const MANAGER = new LoadingManager();
@@ -175,6 +178,18 @@ export class Viewer {
 
     this.el.appendChild(this.renderer.domElement);
     // this.renderer.domElement.prepend(this.el);
+
+    this.renderer2DObject = new CSS2DRenderer();
+    // this.el.appendChild(this.renderer2DObject.domElement);
+    this.renderer2DObject.setSize(el.clientWidth, el.clientHeight);
+    this.renderer2DObject.domElement.style.position = "absolute";
+    this.renderer2DObject.domElement.style.top = "0px";
+    this.renderer2DObject.domElement.style.display = "flex";
+
+    this.renderer2DObject.domElement.style.pointerEvents = "none";
+
+    this.el.appendChild(this.renderer2DObject.domElement);
+
     this.pmremGenerator = new PMREMGenerator(this.renderer);
     this.pmremGenerator.compileEquirectangularShader();
 
@@ -209,6 +224,7 @@ export class Viewer {
 
     this.addAxesHelper();
     this.addGUI();
+    this.updateAnnotationOpacity();
     if (options.kiosk) this.gui.close();
 
     this.animate = this.animate.bind(this);
@@ -289,7 +305,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0x00ff00,
         opacity: 0.35,
-        visible: true,
+        visible: false,
       })
     );
 
@@ -303,7 +319,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0x0000ff,
         opacity: 0.35,
-        visible: true,
+        visible: false,
       })
     );
 
@@ -316,7 +332,7 @@ export class Viewer {
       new THREE.LineBasicMaterial({
         color: 0xff0000,
         opacity: 1,
-        visible: true,
+        visible: false,
       })
     );
     curveSplineEditor.mesh.castShadow = true;
@@ -393,7 +409,7 @@ export class Viewer {
     const materialCurve = new THREE.MeshBasicMaterial({
       wireframe: true,
       color: 0xff0000,
-      visible: true,
+      visible: false,
     });
     // meshCurve = new THREE.Mesh(geomytryCurve, materialCurve);
     meshCurve = new THREE.Mesh(geomytryCurve, materialCurve);
@@ -402,6 +418,47 @@ export class Viewer {
   }
   init() {}
 
+  icon(url, pos) {
+    if (url) {
+      imgElement = document.createElement("img");
+      imgElement.className = "imgElement";
+      imgElement.setAttribute("id", "imgElement");
+      imgElement.src = url;
+      imgElement.width = 35; // Set width
+      imgElement.height = 35; // Set height
+
+      img2DObject = new CSS2DObject(imgElement);
+      img2DObject.position.set(pos[0], pos[1], pos[2]); // Adjust the position in 3D space
+      this.scene.add(img2DObject);
+      img2DObject.scale.set(10000, 10000, 10000);
+      iconTotal.push([imgElement, img2DObject]);
+
+      // imgElement.addEventListener("mouseenter", this.mouseEnter.bind(this));
+
+      // imgElement.addEventListener("mouseleave", this.mouseLeave.bind(this));
+
+      return this.renderer2DObject.domElement;
+    }
+  }
+
+  updateAnnotationOpacity() {
+    if (this.defaultCamera && img2DObject) {
+      const vertOne = new THREE.Vector3(0, 0, 0);
+
+      let noteOneDistance;
+      let noteBehindObject;
+      const motoBikeDistance = this.defaultCamera.position.distanceTo(vertOne);
+
+      //processing opacity
+      iconTotal.map((dt) => {
+        noteOneDistance = this.defaultCamera.position.distanceTo(
+          dt[1].position
+        );
+        noteBehindObject = motoBikeDistance < noteOneDistance;
+        dt[0].style.opacity = noteBehindObject ? "0.15" : "1";
+      });
+    }
+  }
   rendererDom() {
     return this.renderer.domElement;
   }
@@ -430,7 +487,7 @@ export class Viewer {
     console.log("positionnnn");
     const material = new THREE.MeshLambertMaterial({
       color: Math.random() * 0xffffff,
-      visible: true,
+      visible: false,
     });
 
     const object = new THREE.Mesh(geometry, material);
@@ -578,9 +635,11 @@ export class Viewer {
     this.defaultCamera.updateProjectionMatrix();
 
     this.renderer.setSize(clientWidth, clientHeight);
+    this.renderer2DObject.setSize(clientWidth, clientHeight);
   }
   animate(time) {
     requestAnimationFrame(this.animate);
+    this.renderer2DObject.render(this.scene, this.activeCamera);
 
     const dt = (time - this.prevTime) / 1000;
     this.controls.update();
@@ -618,6 +677,8 @@ export class Viewer {
 
   render() {
     this.renderer.render(this.scene, this.activeCamera);
+    this.updateAnnotationOpacity();
+
     if (this.state.grid) {
       this.axesCamera.position.copy(this.defaultCamera.position);
       this.axesCamera.lookAt(this.axesScene.position);
@@ -632,6 +693,7 @@ export class Viewer {
     this.defaultCamera.updateProjectionMatrix();
     // this.vignette.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
+    this.renderer2DObject.setSize(clientWidth, clientHeight);
 
     this.axesCamera.aspect =
       this.axesDiv.clientWidth / this.axesDiv.clientHeight;
@@ -1233,73 +1295,73 @@ export class Viewer {
   }
 
   updateScrollValue(event) {
-    // //zoom in --> delta < 0, zoom out --> delta > 0
-    // let caledValue;
-    // let delta = Math.sign(event.deltaY);
-    // //catch case zoom out && not in processing => return zoom = 0
-    // if (delta > 0 && zoomLevel > -0.01) {
-    //   delta = -1;
-    //   menuStatus.update((n) => (n = true));
-    //   contactStatus.update((n) => (n = true));
-    //   console.log("zoom out: ", zoomLevel);
-    // } else {
-    //   console.log("zoom: ", delta, zoomLevel);
-    //   menuStatus.update((n) => (n = false));
-    //   contactStatus.update((n) => (n = false));
-    //   zoomLevel += delta; // Adjust the factor as needed
-    // }
-    // let valueScroll = zoomLevel.toFixed(0);
-    // let convertedValueScroll =
-    //   Number(valueScroll) >= 0 ? -1 : Number(valueScroll);
-    // //-50 --> +50 ---> map 0 --> 0.9
-    // const total = 100;
-    // caledValue = Math.abs(convertedValueScroll) / total;
-    // console.log("scrollValue: ", caledValue);
-    // console.log("zoom level: ", zoomLevel);
-    // console.log("delta: ", delta);
-    // //Set caledValue is only run from 0 to 1
-    // if (caledValue >= 0 && caledValue <= 0.99 && zoomLevel < -0.01) {
-    //   console.log("tween caledValue");
-    //   const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
-    //   // const pos2 = meshCurve.geometry.parameters.path.getPointAt(
-    //   //   (caledValue * 110) / 100
-    //   // );
-    //   //update Tween pos1
-    //   let coords = {
-    //     x: this.defaultCamera.position.x,
-    //     y: this.defaultCamera.position.y,
-    //     z: this.defaultCamera.position.z,
-    //   };
-    //   new TWEEN.Tween(coords)
-    //     .to({
-    //       x: pos.x,
-    //       y: pos.y,
-    //       z: pos.z,
-    //     })
-    //     .onUpdate(() => {
-    //       this.controls.enabled = false;
-    //       this.defaultCamera.lookAt(coords.x, coords.y, coords.z);
-    //       return this.defaultCamera.position.copy(coords);
-    //     })
-    //     .start();
-    //   // this.defaultCamera.lookAt(pos2);
-    // } else {
-    //   console.log("lui lui ");
-    //   console.log("center ne: ", center);
-    //   this.defaultCamera.position.copy(center);
-    //   this.defaultCamera.position.x += size / 2.0;
-    //   this.defaultCamera.position.y += size / 5.0;
-    //   this.defaultCamera.position.z += size / 2.0;
-    //   this.defaultCamera.lookAt(center);
-    //   this.controls.enabled = true;
-    //   caledValue = 0;
-    //   delta = -1;
-    //   zoomLevel = -0.01;
-    //   menuStatus.update((n) => (n = true));
-    //   contactStatus.update((n) => (n = true));
-    //   //
-    // }
-    // percentLoading.update((n) => (n = caledValue));
+    //zoom in --> delta < 0, zoom out --> delta > 0
+    let caledValue;
+    let delta = Math.sign(event.deltaY);
+    //catch case zoom out && not in processing => return zoom = 0
+    if (delta > 0 && zoomLevel > -0.01) {
+      delta = -1;
+      menuStatus.update((n) => (n = true));
+      contactStatus.update((n) => (n = true));
+      console.log("zoom out: ", zoomLevel);
+    } else {
+      console.log("zoom: ", delta, zoomLevel);
+      menuStatus.update((n) => (n = false));
+      contactStatus.update((n) => (n = false));
+      zoomLevel += delta; // Adjust the factor as needed
+    }
+    let valueScroll = zoomLevel.toFixed(0);
+    let convertedValueScroll =
+      Number(valueScroll) >= 0 ? -1 : Number(valueScroll);
+    //-50 --> +50 ---> map 0 --> 0.9
+    const total = 100;
+    caledValue = Math.abs(convertedValueScroll) / total;
+    console.log("scrollValue: ", caledValue);
+    console.log("zoom level: ", zoomLevel);
+    console.log("delta: ", delta);
+    //Set caledValue is only run from 0 to 1
+    if (caledValue >= 0 && caledValue <= 0.99 && zoomLevel < -0.01) {
+      console.log("tween caledValue");
+      const pos = meshCurve.geometry.parameters.path.getPointAt(caledValue);
+      // const pos2 = meshCurve.geometry.parameters.path.getPointAt(
+      //   (caledValue * 110) / 100
+      // );
+      //update Tween pos1
+      let coords = {
+        x: this.defaultCamera.position.x,
+        y: this.defaultCamera.position.y,
+        z: this.defaultCamera.position.z,
+      };
+      new TWEEN.Tween(coords)
+        .to({
+          x: pos.x,
+          y: pos.y,
+          z: pos.z,
+        })
+        .onUpdate(() => {
+          this.controls.enabled = false;
+          this.defaultCamera.lookAt(coords.x, coords.y, coords.z);
+          return this.defaultCamera.position.copy(coords);
+        })
+        .start();
+      // this.defaultCamera.lookAt(pos2);
+    } else {
+      console.log("lui lui ");
+      console.log("center ne: ", center);
+      this.defaultCamera.position.copy(center);
+      this.defaultCamera.position.x += size / 2.0;
+      this.defaultCamera.position.y += size / 5.0;
+      this.defaultCamera.position.z += size / 2.0;
+      this.defaultCamera.lookAt(center);
+      this.controls.enabled = true;
+      caledValue = 0;
+      delta = -1;
+      zoomLevel = -0.01;
+      menuStatus.update((n) => (n = true));
+      contactStatus.update((n) => (n = true));
+      //
+    }
+    percentLoading.update((n) => (n = caledValue));
   }
 
   updateStatusScroll(param) {
