@@ -168,6 +168,10 @@
     console.log("viewer.getCoordinate(): ", viewer.getCoordinate());
   };
 
+  const onMenuBar = () => {
+    onMenu = !onMenu;
+  };
+
   onMount(() => {
     init();
   });
@@ -240,10 +244,14 @@
       >
     </div>
   </div>
-
   <aside class:onMenu>
+    <div class="back-icon" on:click={onMenuBar}></div>
+
     <Tabs {items} />
   </aside>
+  <div class="left-bar {onMenu ? '' : 'onMenu'}">
+    <div class="next-icon" on:click={onMenuBar}></div>
+  </div>
 </main>
 
 <!-- <SimpleModal
@@ -332,11 +340,11 @@
 
   aside {
     position: absolute;
-    left: -500px;
+    left: -1000px;
     transition: all 1s;
     margin-left: 15px;
     height: 50%;
-    width: 30%;
+    width: 35%;
     top: 10%;
     bottom: 20%;
     border: 2px solid #ddd;
@@ -347,7 +355,7 @@
   }
 
   .onMenu {
-    left: 0px;
+    left: 0px !important;
   }
 
   /* .contact-bar {
@@ -432,10 +440,65 @@
     height: 30px;
   }
 
+  .back-icon {
+    background-image: url("@public/assets/icon/back.svg");
+    width: 80px;
+    height: 30px;
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: white;
+    right: 5px;
+    position: absolute;
+    text-align: center;
+  }
+  .back-icon:hover {
+    background-color: wheat;
+    cursor: pointer;
+  }
+
   .contact-bar__hover:hover {
     cursor: pointer;
     background-color: rgb(194, 200, 141);
     border-radius: 5px;
     height: 100%;
+  }
+
+  .left-bar {
+    position: absolute;
+    left: -300px;
+    transition: all 1s;
+    height: 50%;
+    width: 5%;
+    top: 10%;
+    bottom: 20%;
+    border: 2px solid #ddd;
+    background-color: #56514f;
+    color: #ddd;
+    border-radius: 12px;
+    margin-top: 20px;
+  }
+
+  .next-icon {
+    background-image: url("@public/assets/icon/next.svg");
+    /* height: 30px;
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: white;
+    right: 5px;
+    left: 5px;
+    position: absolute;
+    text-align: center; */
+    height: 30px;
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: white;
+    right: 5px;
+    left: 5px;
+    position: absolute;
+  }
+
+  .next-icon:hover {
+    background-color: wheat;
+    cursor: pointer;
   }
 </style>
