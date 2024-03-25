@@ -336,7 +336,7 @@
     transition: all 1s;
     margin-left: 15px;
     height: 50%;
-    width: 25%;
+    width: 30%;
     top: 10%;
     bottom: 20%;
     border: 2px solid #ddd;
