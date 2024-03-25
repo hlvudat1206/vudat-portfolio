@@ -52,7 +52,7 @@
   }
 
   .js-icon {
-    background-image: url("./public/assets/icon/js.svg");
+    background-image: url("@public/assets/icon/js.svg");
     width: 30px;
     height: 30px;
   }
@@ -62,7 +62,7 @@
     border-radius: 6px;
   }
   .svelte-icon {
-    background-image: url("./public/assets/icon/svelte.svg");
+    background-image: url("@public/assets/icon/svelte.svg");
     width: 80px;
     height: 30px;
   }
@@ -73,7 +73,7 @@
   }
 
   .threejs-icon {
-    background-image: url("./public/assets/icon/threejs.svg");
+    background-image: url("@public/assets/icon/threejs.svg");
     width: 30px;
     height: 30px;
   }
@@ -83,7 +83,7 @@
     border-radius: 6px;
   }
   .git-icon {
-    background-image: url("./public/assets/icon/git.svg");
+    background-image: url("@public/assets/icon/git.svg");
     width: 80px;
     height: 30px;
   }
