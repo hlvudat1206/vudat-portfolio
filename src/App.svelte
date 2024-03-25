@@ -343,7 +343,7 @@
     left: -1000px;
     transition: all 1s;
     margin-left: 15px;
-    height: 50%;
+    height: 45%;
     width: 35%;
     top: 10%;
     bottom: 20%;
@@ -467,7 +467,7 @@
     position: absolute;
     left: -300px;
     transition: all 1s;
-    height: 50%;
+    height: 45%;
     width: 5%;
     top: 10%;
     bottom: 20%;
