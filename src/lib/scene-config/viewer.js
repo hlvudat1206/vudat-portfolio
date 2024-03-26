@@ -38,7 +38,12 @@ import { CSS2DRenderer, CSS2DObject } from "@js/CSS2DRenderer.js";
 
 import { environments } from "@public/assets/environment/index.js";
 import { TransformControls } from "@js/transFormControls.js";
-import { percentLoading, menuStatus, contactStatus } from "./store.js";
+import {
+  percentLoading,
+  menuStatus,
+  contactStatus,
+  rightMenuStatus,
+} from "./store.js";
 
 // import { createBackground } from '../lib/three-vignette.js';
 
@@ -1303,11 +1308,13 @@ export class Viewer {
       delta = -1;
       menuStatus.update((n) => (n = true));
       contactStatus.update((n) => (n = true));
+      rightMenuStatus.update((n) => (n = true));
       console.log("zoom out: ", zoomLevel);
     } else {
       console.log("zoom: ", delta, zoomLevel);
       menuStatus.update((n) => (n = false));
       contactStatus.update((n) => (n = false));
+      rightMenuStatus.update((n) => (n = false));
       zoomLevel += delta; // Adjust the factor as needed
     }
     let valueScroll = zoomLevel.toFixed(0);
@@ -1359,6 +1366,8 @@ export class Viewer {
       zoomLevel = -0.01;
       menuStatus.update((n) => (n = true));
       contactStatus.update((n) => (n = true));
+      rightMenuStatus.update((n) => (n = true));
+
       //
     }
     percentLoading.update((n) => (n = caledValue));

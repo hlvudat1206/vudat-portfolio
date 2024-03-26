@@ -2,9 +2,6 @@
 </script>
 
 <div class="image-text">
-  <div>
-    Design and Develop Web App From 2D Web Elements to 3D Web Integrations
-  </div>
   <br />
   <div>
     <div>2D: Frontend: Svelte, Reactjs, Vanilla Javascript</div>
@@ -49,6 +46,7 @@
     height: 80%; */
     position: absolute;
     text-align: left;
+    width: 100%;
   }
 
   .js-icon {
@@ -93,13 +91,17 @@
     border-radius: 6px;
   }
   .icon-box {
+    position: absolute;
     border-radius: 4px;
     border: 0.25px solid #e9d4d4;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     background-color: wheat;
-    justify-content: space-around;
     margin-top: 20px;
+    width: 70%;
+    left: 15%;
+    right: 10%;
+    justify-content: space-around;
   }
 </style>

@@ -11,6 +11,7 @@
     percentLoading,
     menuStatus,
     contactStatus,
+    rightMenuStatus,
   } from "./lib/scene-config/store.js";
   import Tabs from "./components/tab/index.svelte";
   import Bio from "./content/bio.svelte";
@@ -19,6 +20,7 @@
   let scene;
   let selectedModel = "./assets/models/cyberCity/scene.gltf";
   let infoUrlPng = "./assets/icon/info-icon.png";
+  import BioImage from "./content/bio-image.svelte";
 
   let viewer;
   let canvas;
@@ -26,6 +28,7 @@
   let textButtonView = "Scroll Mode";
   let onMenu = true;
   let onContactBar = true;
+  let onRightMenu = true;
   let items = [
     { label: "Introduce", value: 1, component: Bio },
     { label: "Skills", value: 2, component: Skills },
@@ -38,6 +41,7 @@
   window.VIEWER = {};
 
   $: onMenu = $menuStatus;
+  $: onRightMenu = $rightMenuStatus;
   $: console.log("contactStatus: ", $contactStatus),
     (onContactBar = $contactStatus);
 
@@ -161,6 +165,7 @@
     isGoMallMode = !isGoMallMode;
     onMenu = !onMenu;
     onContactBar = !onContactBar;
+    onRightMenu = !onRightMenu;
     viewer.updateStatusScroll(isGoMallMode);
   };
   const interactObject = () => {
@@ -252,6 +257,8 @@
   <div class="left-bar {onMenu ? '' : 'onMenu'}">
     <div class="next-icon" on:click={onMenuBar}></div>
   </div>
+
+  <rightside class:onRightMenu> <BioImage></BioImage> </rightside>
 </main>
 
 <!-- <SimpleModal
@@ -354,6 +361,26 @@
     margin-top: 20px;
   }
 
+  rightside {
+    position: absolute;
+    right: -1000px;
+    transition: all 1s;
+    margin-left: 15px;
+    height: 45%;
+    width: 25%;
+    top: 10%;
+    bottom: 20%;
+    border: 2px solid #ddd;
+    background-color: #56514f;
+    color: #ddd;
+    border-radius: 12px;
+    margin-top: 20px;
+    margin-right: 10px;
+  }
+
+  .onRightMenu {
+    right: 0px;
+  }
   .onMenu {
     left: 0px !important;
   }
